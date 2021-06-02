@@ -29,7 +29,7 @@ jobs:
         GIT_BRANCH: ${{ steps.extract_branch.outputs.branch }}
         GIT_REVISION: ${{ steps.extract_hash.outputs.hash }}
       with:
-        name: c2dhunilu/history-of-justice
+        name: c2dhunilu/legionnaire
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
         buildargs: GIT_BRANCH,GIT_REVISION
