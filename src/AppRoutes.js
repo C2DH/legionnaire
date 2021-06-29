@@ -7,6 +7,7 @@ import AppRouteLoading from './pages/AppRouteLoading'
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Browse = lazy(() => import('./pages/Browse'));
+const Person = lazy(() => import('./pages/Person'));
 const Search = lazy(() => import('./pages/Search'));
 const Collection = lazy(() => import('./pages/Collection'));
 const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
@@ -44,6 +45,9 @@ const AppRoutes = ({enableGA=false}) => {
         </Route>
         <Route exact path="/browse">
           <Browse />
+        </Route>
+        <Route exact path="/browse/person/:slug">
+          <Person />
         </Route>
         <Route exact path="/search">
           <Search />
