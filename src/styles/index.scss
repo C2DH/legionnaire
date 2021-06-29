@@ -1,6 +1,6 @@
 // Override variables
-@import 'variables';
 @import 'fonts';
+@import 'variables';
 
 // Boostrap scss
 @import '~bootstrap/scss/bootstrap';
@@ -14,6 +14,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  background-color: var(--dark);
+  color: var(--primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -23,11 +25,8 @@ code {
     monospace;
 }
 
-:root {
-  --font-family-headings: 'Olio-Bold';
-  --font-family-titles: 'OlioInline';
-}
-
 h1{
-  font-family: var(--font-family-titles)
+  font-family: var(--font-family-titles);
+  color: var(--primary);
+  font-weight: 900;
 }

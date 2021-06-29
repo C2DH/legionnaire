@@ -25,10 +25,74 @@
 /* @import url("//hello.myfonts.net/count/3ce5b2"); */
 
 @font-face {
-  font-family: 'Olio-Bold';
-  src: url('./fonts/Olio-Bold/font.woff2') format('woff2'), url('./fonts/Olio-Bold/font.woff') format('woff');
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBL___.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
 }
 @font-face {
-  font-family: 'OlioInline';
-  src: url('./fonts/OlioInline/font.woff2') format('woff2'), url('./fonts/OlioInline/font.woff') format('woff');
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBLI__.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBW___.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBBI__.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBM___.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBMI__.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBB___.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBOI__.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBEB__.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBEBI_.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBBL__.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ashby';
+  src: url('./fonts/ashby/ASHBBLI_.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
 }

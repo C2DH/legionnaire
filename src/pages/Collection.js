@@ -1,17 +1,17 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { TermsOfUseRoute } from '../constants';
+import { CollectionRoute } from '../constants';
 
-const TermsOfUse = () => {
+const Collection = () => {
   return (
     <Container>
       <Row>
         <Col>
-          <h1 className="my-5">{ TermsOfUseRoute.label.toUpperCase() }</h1>
+          <h1 className="my-5">{CollectionRoute.label.toUpperCase()}</h1>
         </Col>
       </Row>
     </Container>
   )
 }
 
-export default TermsOfUse
+export default Collection;

@@ -11,6 +11,7 @@
     "lodash.intersection": "^4.4.0",
     "moment": "^2.29.1",
     "react": "^17.0.1",
+    "react-app-polyfill": "^2.0.0",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
     "react-ga": "^3.3.0",
@@ -37,7 +38,8 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not ie < 11"
     ],
     "development": [
       "last 1 chrome version",
