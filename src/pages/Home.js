@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 const Home = () => {
   return (
-    <Container fluid className="h-100">
+    <Container>
       <Row>
         <Col>
           <h1 className="my-5">LÉGIONNAIRE</h1>
