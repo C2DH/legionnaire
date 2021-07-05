@@ -21,19 +21,18 @@ export function useGetPerson(id) {
 
 /**
  * Hook to get a person identified by its id from the backend
- * @param   id  id or slug of the person to get
  */
-const getPersonsParams = {
+const personsParams = {
   filters: {
     data__type: 'person'
   },
   limit: 1000
 };
-export function useGetPersons(id) {
+export function useGetPersons() {
 
   return useRunRj(
     docsState,
-    [ getPersonsParams ],
+    [ personsParams ],
     false,
     (state, { getData }) => ({
       persons: getData(state)?.results
