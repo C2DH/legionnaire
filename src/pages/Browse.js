@@ -1,18 +1,12 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useDocuments } from '@c2dh/react-miller'
 import { BrowseRoute } from '../constants';
+import { useGetPersons } from '../hooks';
 
 const Browse = () => {
 
-  const [documents, pagination, { loading, error }] = useDocuments({
-    limit: 1000,
-    offset: 0,
-    filters: {
-      data__type: 'person'
-    }
-  });
+  const [{ persons }] = useGetPersons();
 
   return (
     <Container>
@@ -21,12 +15,12 @@ const Browse = () => {
           <h1 className="my-5">{BrowseRoute.label.toUpperCase()}</h1>
         </Col>
       </Row>
-      {documents && documents.map(doc => {
+      {persons && persons.map(person => {
         return (
-          <Row key={doc.slug}>
+          <Row key={person.slug}>
             <Col>
-              <Link to={`/browse/person/${doc.slug}`}>
-                {doc.data.title}
+              <Link to={`/browse/person/${person.slug}`}>
+                {person.data.title}
               </Link>
             </Col>
           </Row>
