@@ -9,9 +9,7 @@ const Person = () => {
 
   const { slug } = useParams();
   const [{ person }] = useGetPerson(slug);
-  const [{ events, eventsByTypes }] = useGetEventsByPersonId(person?.id);
-  console.log(events);
-  console.log(eventsByTypes);
+  const [{ eventsByTypes }] = useGetEventsByPersonId(person?.id);
 
   return (
     <Container className="Person">
@@ -55,13 +53,13 @@ const Person = () => {
               <Col sm={5}>
                 <div className="label">DATE DE RÉSIDENCE</div>
                 {eventsByTypes?.residence.map(residence =>
-                  <div>{residence.data.date}</div>
+                  <div key={residence.slug}>{residence.data.date}</div>
                 )}
               </Col>
               <Col>
                 <div className="label">LIEU DE RÉSIDENCE</div>
                 {eventsByTypes?.residence.map(residence =>
-                  <div>
+                  <div key={residence.slug}>
                     {residence.data.place.data.city} ({residence.data.place.data.country})
                   </div>
                 )}
@@ -73,13 +71,13 @@ const Person = () => {
               <Col sm={5}>
                 <div className="label">DATE D'ENGAGEMENT</div>
                 {eventsByTypes?.enrollment.map(enrollment =>
-                  <div>{enrollment.data.date}</div>
+                  <div key={enrollment.slug}>{enrollment.data.date}</div>
                 )}
               </Col>
               <Col>
                 <div className="label">LIEU D'ENGAGEMENT</div>
                 {eventsByTypes?.enrollment.map(enrollment =>
-                  <div>
+                  <div key={enrollment.slug}>
                     {enrollment.data.place.data.city} ({enrollment.data.place.data.country})
                   </div>
                 )}
@@ -89,15 +87,15 @@ const Person = () => {
           {eventsByTypes?.depot &&
             <Row>
               <Col sm={5}>
-                <div className="label">DÉPOT</div>
+                <div className="label">DATE DÉPOT</div>
                 {eventsByTypes?.depot.map(depot =>
-                  <div>{depot.data.date}</div>
+                  <div key={depot.slug}>{depot.data.date}</div>
                 )}
               </Col>
               <Col>
                 <div className="label">LIEU DÉPOT</div>
                 {eventsByTypes?.depot.map(depot =>
-                  <div>
+                  <div key={depot.slug}>
                     {depot.data.place.data.city} ({depot.data.place.data.country})
                   </div>
                 )}
