@@ -1,6 +1,9 @@
 import { rj } from 'react-rocketjump';
 import rjCache from 'react-rocketjump/plugins/cache';
+import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
+
 import { getDocument, getDocuments } from './api';
+
 
 export const docState = rj(
   rjCache({
@@ -8,6 +11,7 @@ export const docState = rj(
     size: 50
   }), getDocument
 );
+
 export const docsState = rj(
   rjCache({
     ns: 'millerDocuments',
@@ -64,4 +68,15 @@ export const eventsState = rj(
       return oldReducer(state, action) // forward any other action to the default reducer
     }
   }
+);
+
+export const mediasState = rj(
+  rjCache({
+    ns: 'medias',
+    size: 50
+  }),
+  rjList({
+    pageSize: 50,
+    pagination: limitOffsetPaginationAdapter,
+  }), getDocuments
 );
