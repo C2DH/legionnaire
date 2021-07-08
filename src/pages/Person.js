@@ -34,20 +34,6 @@ const Person = () => {
               </Col>
             </Row>
           }
-          {eventsByTypes?.death &&
-            <Row>
-              <Col sm={5}>
-                <div className="label">DATE DE DÈCÈS</div>
-                <div>{eventsByTypes.death[0].data.date}</div>
-              </Col>
-              <Col>
-                <div className="label">LIEU DE DÈCÈS</div>
-                <div>
-                  {eventsByTypes.death[0].data.place.data.city} ({eventsByTypes.death[0].data.place.data.country})
-                </div>
-              </Col>
-            </Row>
-          }
           {eventsByTypes?.residence &&
             <Row>
               <Col sm={5}>
@@ -99,6 +85,20 @@ const Person = () => {
                     {depot.data.place.data.city} ({depot.data.place.data.country})
                   </div>
                 )}
+              </Col>
+            </Row>
+          }
+          {eventsByTypes?.death &&
+            <Row>
+              <Col sm={5}>
+                <div className="label">DATE DE DÈCÈS</div>
+                <div>{eventsByTypes.death[0].data.date}</div>
+              </Col>
+              <Col>
+                <div className="label">LIEU DE DÈCÈS</div>
+                <div>
+                  {eventsByTypes.death[0].data.place.data.city} ({eventsByTypes.death[0].data.place.data.country})
+                </div>
               </Col>
             </Row>
           }
