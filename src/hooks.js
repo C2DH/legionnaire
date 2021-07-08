@@ -91,7 +91,8 @@ export function useGetMedias(offset = 0) {
       type__in: ['image', 'pdf']
     },
     limit: 50,
-    offset: offset
+    offset: offset,
+    orderby: 'data__title'
   }), [offset]);
 
   return useRunRj(
