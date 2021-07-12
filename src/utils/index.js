@@ -1,3 +1,3 @@
-import labels from './labels.json';
+import labels from '../labels.json';
 
 export const getLabel = key => labels[key] || key;
