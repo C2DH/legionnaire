@@ -80,30 +80,55 @@ export function useGetEventsByPersonId(id) {
 }
 
 /**
- * Hook to get paginated list of meidas
+ * Hook to get paginated list of medias
  * @param   offset  offset of the current page to load
  */
-export function useGetMedias(offset = 0) {
+export function useGetMedias(offset = 0, type) {
 
   //  Memorize params to avoid infinite loop
   const params = useMemo(() => ({
     filters: {
-      type__in: ['image', 'pdf']
+      type__in: ['image', 'pdf'],
+      data__type: type
     },
     limit: 50,
     offset: offset,
     orderby: 'data__title'
-  }), [offset]);
+  }), [offset, type]);
 
   return useRunRj(
     mediasState,
-    [ deps.withMeta(params, {append: true}) ],
+    [ deps.withMeta(params, {append: offset !== 0}) ],
     false,
     (state, { getList, getCount, hasNext, getNext }) => ({
       medias: getList(state),
       count: getCount(state),
       canLoadMore: hasNext(state),
       nextOffset: getNext(state)?.offset
+    })
+  );
+}
+
+/**
+ * Hook to get type facets of medias
+ */
+const mediaFacetsParams =
+  {
+    filters: {
+      type__in: ['image', 'pdf']
+    },
+    limit: 1,
+    facets: 'data__type'
+  };
+export function useGetMediaFacets() {
+
+  return useRunRj(
+    docsState,
+    [ mediaFacetsParams ],
+    true,
+    (state, { getData }) => ({
+      mediaTypeFacets: getData(state)?.facets?.data__type,
+      count: getData(state)?.count
     })
   );
 }

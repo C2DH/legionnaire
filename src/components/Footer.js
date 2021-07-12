@@ -9,7 +9,7 @@ const now = new Date()
 const Footer = ()=> {
 
   return (
-    <Container className="mt-5">
+    <Container as="footer" className="mt-5">
       <Row>
         <Col>Copyright © <a href="https://www.uni.lu/">University of Luxembourg</a> {now.getFullYear()}</Col>
         <Col>

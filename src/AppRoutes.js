@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useEffect } from 'react'
 import { Switch, Route, useLocation } from "react-router-dom"
 import ReactGA from 'react-ga'
+import { QueryParamProvider } from 'use-query-params';
 import AppRouteLoading from './pages/AppRouteLoading'
 
 /* Pages */
@@ -36,32 +37,34 @@ const AppRoutes = ({enableGA=false}) => {
 
   return (
     <Suspense fallback={<AppRouteLoading/>}>
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route exact path="/about">
-          <About />
-        </Route>
-        <Route exact path="/browse">
-          <Browse />
-        </Route>
-        <Route exact path="/browse/person/:slug">
-          <Person />
-        </Route>
-        <Route exact path="/search">
-          <Search />
-        </Route>
-        <Route exact path="/collection">
-          <Collection />
-        </Route>
-        <Route exact path="/terms">
-          <TermsOfUse />
-        </Route>
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
+      <QueryParamProvider ReactRouterRoute={Route}>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route exact path="/about">
+            <About />
+          </Route>
+          <Route exact path="/browse">
+            <Browse />
+          </Route>
+          <Route exact path="/browse/person/:slug">
+            <Person />
+          </Route>
+          <Route exact path="/search">
+            <Search />
+          </Route>
+          <Route exact path="/collection">
+            <Collection />
+          </Route>
+          <Route exact path="/terms">
+            <TermsOfUse />
+          </Route>
+          <Route path="*">
+            <NotFound />
+          </Route>
+        </Switch>
+      </QueryParamProvider>
     </Suspense>
   )
 }
