@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header>
       <Navbar
-        className = "Header"
+        className = "Header p-2"
         sticky    = "top"
         expand    = "md"
       >

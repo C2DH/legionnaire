@@ -14,8 +14,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  background-color: var(--dark);
-  color: var(--primary);
+  background-color: var(--bs-dark);
+  color: var(--bs-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -27,6 +27,6 @@ code {
 
 h1{
   font-family: var(--font-family-titles);
-  color: var(--primary);
+  color: var(--bs-primary);
   font-weight: 700;
 }

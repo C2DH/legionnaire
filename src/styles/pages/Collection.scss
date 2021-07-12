@@ -1,5 +1,7 @@
+@import '../variables';
+
 .Collection {
   .media-type-facet .nav-link.active {
-    color: #645534;
+    color: $link-hover-color;
   }
 }

@@ -5,13 +5,13 @@
   "proxy": "http://localhost",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.1.9",
     "axios": "^0.21.1",
-    "bootstrap": "^4.5.3",
-    "i18next": "^19.8.4",
+    "bootstrap": "^5.0.2",
     "lodash.intersection": "^4.4.0",
     "moment": "^2.29.1",
+    "node-sass": "^6.0.1",
     "react": "^17.0.1",
     "react-app-polyfill": "^2.0.0",
     "react-bootstrap": "^1.4.0",
@@ -20,15 +20,14 @@
     "react-rocketjump": "^2.6.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.1",
-    "react-spring": "^8.0.27",
+    "react-scripts": "4.0.3",
+    "react-spring": "^9.2.4",
     "react-virtualized": "^9.22.3",
-    "sass": "^1.30.0",
     "use-query-params": "^1.2.3",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^2.1.0"
   },
   "devDependencies": {
-    "http-proxy-middleware": "^1.0.5"
+    "http-proxy-middleware": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,7 +51,8 @@
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "ie 11"
     ]
   }
 }

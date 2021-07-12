@@ -1,17 +1,19 @@
+@import '../variables';
+
 .Header {
-  background-color: var(--primary);
+  background-color: $primary;
 
   .navbar-brand {
-    color: var(--dark);
-    font-family: var(--font-family-titles);
+    color: $dark;
+    font-family: $font-family-titles;
     font-weight: 900;
   }
 
   .navbar-nav .nav-link {
-    color: var(--dark);
+    color: $dark;
 
     &:hover, &:focus, &.active {
-      color: var(--dark);
+      color: $dark;
       font-weight: bold;
     }
   }
