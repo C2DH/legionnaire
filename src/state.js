@@ -19,6 +19,19 @@ export const docsState = rj(
   }), getDocuments
 );
 
+export const peopleState = rj(
+  rjCache({
+    ns: 'persons',
+    size: 50
+  }),
+  rjList({
+    pageSize: 100,
+    pagination: limitOffsetPaginationAdapter,
+  }), {
+    effect: getDocuments,
+  }
+);
+
 export const eventsState = rj(
   rjCache({
     ns: 'events',

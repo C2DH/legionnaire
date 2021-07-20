@@ -49,7 +49,7 @@ const Collection = () => {
       <Row>
         {medias &&
           <CollectionGrid
-            collection  = {medias}
+            items       = {medias}
             canLoadMore = {canLoadMore}
             loadMore    = {() => setOffset(nextOffset)}
           />

@@ -5,15 +5,15 @@ import CollectionCard from './CollectionCard';
 const COLUMN_WIDTH = 225;
 const COLUMN_HEIGHT = 370;
 
-const CollectionGrid = ({ collection, canLoadMore=false, loadMore }) => {
+const CollectionGrid = ({ items, canLoadMore=false, loadMore }) => {
 
   const [colCount, setColCount] = useState(3);
-  const rowCount = Math.ceil(collection.length / colCount);
+  const rowCount = Math.ceil(items.length / colCount);
 
   function cellRenderer({ columnIndex, key, rowIndex, style }) {
 
     const i = rowIndex * colCount + columnIndex
-    const item = collection[i]
+    const item = items[i]
 
     if (!item) return null;
 
@@ -32,7 +32,7 @@ const CollectionGrid = ({ collection, canLoadMore=false, loadMore }) => {
 
   function onSectionRendered({ columnStopIndex, rowStopIndex }) {
     const i = rowStopIndex * colCount + columnStopIndex
-    if (canLoadMore && i >= collection.length - 10)
+    if (canLoadMore && i >= items.length - 10)
       loadMore()
   }
 

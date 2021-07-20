@@ -3,11 +3,14 @@ import { useRunRj, deps } from 'react-rocketjump';
 import {
   docState,
   docsState,
+  peopleState,
   eventsState,
   mediasState
 } from './state';
 
 const ALL_RECORDS = 10000;
+const MEDIA_PHOTO = "photo";
+const EVENT_BIRTH = "birth";
 
 /**
  * Hook to get a person identified by its id from the backend
@@ -26,21 +29,43 @@ export function useGetPerson(id) {
 
 /**
  * Hook to get a person identified by its id from the backend
+ * @param   offset  offset of the current page to load
  */
-const personsParams = {
-  filters: {
-    data__type: 'person'
-  },
-  limit: 1000
-};
-export function useGetPersons() {
+export function useGetPeople(offset = 0) {
+
+  //  Memorize params to avoid infinite loop
+  const params = useMemo(() => ({
+    filters: {
+      data__type: 'person'
+    },
+    limit: 100,
+    detailed: true,
+    offset: offset,
+    orderby: 'title'
+  }), [offset]);
 
   return useRunRj(
-    docsState,
-    [ personsParams ],
-    true,
-    (state, { getData }) => ({
-      persons: getData(state)?.results
+    peopleState,
+    [ deps.withMeta(params, {append: offset !== 0}) ],
+    false,
+    (state, { getList, getCount, hasNext, getNext }) => ({
+      people: (getList(state) || []).map(person => {
+        for(const related of person.documents) {
+
+          //  Get the firtst photo from related documents and put it in the illustration property
+          if(!person.illustration && related.data.type === MEDIA_PHOTO)
+            person.illustration = related;
+
+          // Get the birth date from related documents and put the year in the data.birth_year property
+          if(related.data.event_type === EVENT_BIRTH)
+            person.data.birth_year = related.data.date?.substring(0, 4);
+
+        }
+        return person;
+      }),
+      count: getCount(state),
+      canLoadMore: hasNext(state),
+      nextOffset: getNext(state)?.offset
     })
   );
 }

@@ -1,0 +1,24 @@
+@import '../variables';
+
+.PersonCard {
+  background-color: $primary;
+  color: $dark;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+
+  a {
+    color: $dark;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: $link-hover-dark;
+  }
+
+  img {
+    margin-bottom: 5px;
+  }
+}

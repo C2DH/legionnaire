@@ -1,31 +1,30 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Container, Row } from 'react-bootstrap';
 import { BrowseRoute } from '../constants';
-import { useGetPersons } from '../hooks';
+import { useGetPeople } from '../hooks';
+import PeopleGrid from '../components/PeopleGrid';
 
 const Browse = () => {
 
-  const [{ persons }] = useGetPersons();
+  const [offset,    setOffset]    = useState(0);
+  const [{ people, canLoadMore, nextOffset }] = useGetPeople(offset);
 
   return (
     <Container>
       <Row>
-        <Col>
-          <h1 className="my-5">{BrowseRoute.label.toUpperCase()}</h1>
-        </Col>
+        <h1 className="my-5">{BrowseRoute.label.toUpperCase()}</h1>
       </Row>
-      {persons && persons.map(person => {
-        return (
-          <Row key={person.slug}>
-            <Col>
-              <Link to={`/browse/person/${person.slug}`}>
-                {person.data.title}
-              </Link>
-            </Col>
-          </Row>
-        )
-      })}
+
+      <Row>
+        {people &&
+          <PeopleGrid
+            items       = {people}
+            canLoadMore = {canLoadMore}
+            loadMore    = {() => setOffset(nextOffset)}
+          />
+        }
+      </Row>
+
     </Container>
   )
 }
