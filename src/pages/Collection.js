@@ -30,7 +30,7 @@ const Collection = () => {
         <h1 className="my-5">{CollectionRoute.label.toUpperCase()}</h1>
       </Row>
 
-      <Row>
+      <Row className="position-sticky">
         <Nav
           className         = "media-type-facet"
           defaultActiveKey  = {TYPE_FACET_ALL}

@@ -9,7 +9,7 @@ const Header = () => {
     <header>
       <Navbar
         className = "Header p-2"
-        sticky    = "top"
+        fixed     = "top"
         expand    = "md"
       >
         <Navbar.Brand
