@@ -19,11 +19,13 @@ const PersonCard = ({ person, imageHeight }) => {
       >
       */}
         {imageHeight &&
-          <img
-            src   = {person.illustration.data.resolutions?.thumbnail.url}
-            alt   = {person.illustration.title}
-            style = {{ height: imageHeight }}
-          />
+          <div class="thumbnail">
+            <img
+              src   = {person.illustration.data.resolutions?.thumbnail.url}
+              alt   = {person.illustration.title}
+              style = {{ height: imageHeight }}
+            />
+          </div>
         }
         <div>
           { person.title }
