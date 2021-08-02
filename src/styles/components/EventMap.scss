@@ -1,0 +1,51 @@
+@import '../variables';
+
+.EventMap {
+
+  height: calc(100vh - 350px);
+  width: 100%;
+  min-height: 300px;
+
+  .marker {
+    border-radius: 50%;
+    background-color: rgba($primary, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $dark;
+    border: 2px solid $dark;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    transition: background-color 200ms;
+
+    &:hover {
+      background-color: rgba($link-hover-color, 0.85);
+    }
+  }
+
+  .popup {
+    .mapboxgl-popup-tip {
+      border-bottom-color: $primary;
+    }
+
+    .mapboxgl-popup-content {
+      background-color: $primary;
+      color: $dark;
+
+      .title {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .zoomControl{
+    left: 20px;
+    top: 20px;
+  }
+
+  .zoomControl button{
+    background-color: rgba($primary, .7)!important;
+  }
+
+}

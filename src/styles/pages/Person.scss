@@ -1,4 +1,14 @@
+@import '../variables';
+
 .Person {
+
+  .position-sticky {
+    z-index: 100;
+    top: 65px;
+    position: sticky;
+    background-color: $dark;
+  }
+
   .label {
     color: #71613b;
   }

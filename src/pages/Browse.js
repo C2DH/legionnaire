@@ -6,7 +6,7 @@ import PeopleGrid from '../components/PeopleGrid';
 
 const Browse = () => {
 
-  const [offset,    setOffset]    = useState(0);
+  const [offset, setOffset]    = useState(0);
   const [{ people, canLoadMore, nextOffset }] = useGetPeople(offset);
 
   return (

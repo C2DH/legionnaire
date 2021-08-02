@@ -93,12 +93,7 @@ export function useGetEventsByPersonId(id) {
   const result = useRunRj(
     eventsState,
     [ deps.maybeNull(params) ],
-    true,
-    (state, { getData, getEventsByType }) => ({
-      events: getData(state),
-      //  Selecgtor to get events in an object with the event type as key
-      eventsByTypes: getEventsByType(state)
-    })
+    true
   );
 
   return result;

@@ -41,6 +41,12 @@ export const eventsState = rj(
 
     //  Selecgtor to get events in an object with the event type as key
     selectors: ({ getData }) => ({
+      getEvents: state => getData(state)?.results.map(
+        event => ({
+          ...event,
+          coordinates: [...event.data.place.data.coordinates.geometry.coordinates].reverse()
+        })
+      ),
       getEventsByType: state => {
 
         const eventByTypes = {};
@@ -55,6 +61,11 @@ export const eventsState = rj(
         return eventByTypes;
       }
     }),
+
+    computed: {
+      events: 'getEvents',
+      eventsByType: 'getEventsByType'
+    },
 
     // Reducer to inject related document (place and person) directly in the data with the type as key
     reducer: oldReducer => (state, action) => {
