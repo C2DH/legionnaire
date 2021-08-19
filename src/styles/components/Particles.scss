@@ -1,0 +1,39 @@
+.ParticlesControls {
+
+  position: absolute;
+  padding: 10px;
+  width: 200px;
+  right: 20px;
+  top: 90px;
+  background-color: rgba(0, 0, 0, 0.4);
+  font-size: 12px;
+
+  input, select {
+    font-size: 12px;
+    padding: 0 6px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    height: 12px;
+    width: 12px;
+    margin-top: -2px;
+  }
+
+  label.col {
+    padding: 7px 0 7px 10px;
+    text-align: right;
+    height: auto;
+  }
+
+  .col {
+    padding-left: 5px;
+    height: 24px;
+    text-align: left;
+  }
+
+  .form-check {
+    text-align: left;
+    margin-left: 30px;
+    min-height: 1.5rem;
+  }
+}

@@ -19,7 +19,7 @@ const PersonCard = ({ person, imageHeight }) => {
       >
       */}
         {imageHeight &&
-          <div class="thumbnail">
+          <div className="thumbnail">
             <img
               src   = {person.illustration.data.resolutions?.thumbnail.url}
               alt   = {person.illustration.title}

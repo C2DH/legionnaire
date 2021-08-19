@@ -1,30 +1,57 @@
-import React, { useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import particles from '../utils/particles.js';
+import React, { useState } from 'react';
+import { Container, Row } from 'react-bootstrap';
+import Particles from '../components/Particles';
 import '../styles/pages/Home.scss';
+
+const imagesSrc = {
+  thumbnail: "/media/image/snapshots/84995bee11dbc90364c39285c9602d54-72-0-260-0.jpg",
+  medium: "/media/image/snapshots/84995bee11dbc90364c39285c9602d54-96-768-0-0.jpg",
+  preview: "/media/image/snapshots/84995bee11dbc90364c39285c9602d54.jpg",
+  large: "/media/image/snapshots/84995bee11dbc90364c39285c9602d54-96-0-0-1200.jpg",
+  original: "/media/image/84995bee11dbc90364c39285c9602d54.jpg"
+};
 
 const Home = () => {
 
-  useEffect(() => {
-    particles('particles');
-  }, []);
+  const [imgSrc, setImgSrc]   = useState(imagesSrc.medium);
+  const [size, setSize]       = useState(1);
+  const [space, setSpace]     = useState(0);
+  const [scale, setScale]     = useState(1);
+  const [radius, setRadius]   = useState(64);
+  const [opacity, setOpacity] = useState(1);
+  const [shaker, setShaker]   = useState(false);
+  const [hold, setHold]       = useState(false);
+
+  const particles_changeHandler = (type, value) => {
+    switch(type) {
+    case 'src': setImgSrc(value); break;
+    case 'size': setSize(value); break;
+    case 'space': setSpace(value); break;
+    case 'scale': setScale(value); break;
+    case 'radius': setRadius(value); break;
+    case 'opacity': setOpacity(value); break;
+    case 'shaker': setShaker(value); break;
+    case 'hold': setHold(value); break;
+    default:
+    }
+  };
 
   return (
     <Container className="Home">
-      <Row>
-        <Col>
-          <h1 className="my-5">LÉGIONNAIRE</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="animation" md={{ order: 'last' }}>
-            <img src="/media/image/snapshots/90b96d0e3a05781fed01e9f754090f0c.jpg" />
-            <div id="particles"></div>
-        </Col>
-        <Col md>
-          <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
-          </blockquote>
-        </Col>
+      <Row className="justify-content-center">
+        <Particles
+          src       = {imgSrc}
+          size      = {size}
+          space     = {space}
+          scale     = {scale}
+          radius    = {radius}
+          opacity   = {opacity}
+          shaker    = {shaker}
+          hold      = {hold}
+          imagesSrc = {imagesSrc}
+          onChange  = {particles_changeHandler}
+          withControls
+        />
       </Row>
     </Container>
   )
