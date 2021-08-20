@@ -1,7 +1,7 @@
 @import '../variables';
 
 .PersonCard {
-  background-color: $primary;
+  background-color: var(--bs-gray-400);
   color: $dark;
   font-size: 1rem;
   line-height: 1.3;
@@ -10,12 +10,12 @@
   width: 100%;
 
   a {
-    color: $dark;
+    color: var(--bs-dark);
     text-decoration: none;
   }
 
   a:hover {
-    color: $link-hover-dark;
+    color: var(--bs-primary);
 
     img {
       -webkit-filter: brightness(100%);

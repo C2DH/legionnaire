@@ -94,12 +94,14 @@ const PeopleGrid = ({ items, canLoadMore=false, loadMore }) => {
           disableHeigth
           style         = {{ height: 'auto' }}
           onResize      = {onResize}
+          className     = "w-100"
         >
-          {({ width }) => (
+          {() => (
 
             <div ref={registerChild}>
               <Masonry
                 autoHeight
+                className         = "mx-auto"
                 ref               = {masonry}
                 cellCount         = {items.length}
                 cellMeasurerCache = {cache}
@@ -107,7 +109,7 @@ const PeopleGrid = ({ items, canLoadMore=false, loadMore }) => {
                 cellRenderer      = {cellRenderer}
                 onCellsRendered   = {onCellsRendered}
                 height            = {height}
-                width             = {width}
+                width             = {colCount * (COLUMN_WIDTH + SPACER) - SPACER}
                 scrollTop         = {scrollTop}
               />
             </div>

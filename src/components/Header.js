@@ -8,27 +8,29 @@ const Header = () => {
   return (
     <header>
       <Navbar
-        className = "Header p-2"
+        className = "Header"
         fixed     = "top"
         expand    = "md"
+        bg        = "light"
       >
         <Navbar.Brand
           as        = {Link}
           to        = "/"
-          className = "mr-auto"
+          className = "logo ms-4"
         >
-          LÉGIONNAIRE
+          <img src="/logo.svg" alt="Logo Légionnaire" height="48" />
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-          <Nav>
+          <Nav className="main-menu">
 
             {PrimaryRoutes.map(route =>
               <Nav.Link
-                as  = {NavLink}
-                to  = {route.to}
-                key = {route.to}
+                as        = {NavLink}
+                to        = {route.to}
+                key       = {route.to}
+                className = "menu-item"
               >
                 {route.label}
               </Nav.Link>

@@ -7,7 +7,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Header />
-      <main>
+      <main className="mt-5">
         <AppRoutes/>
       </main>
       <Footer />

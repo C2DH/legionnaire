@@ -43,16 +43,18 @@ const CollectionGrid = ({ items, canLoadMore=false, loadMore }) => {
           disableHeigth
           style         = {{ height: 'auto' }}
           onResize      = {onResize}
+          className     = "w-100"
         >
-          {({ width }) => (
+          {() => (
 
             <div ref={registerChild}>
               <Grid
                 autoHeight
+                className         = "mx-auto"
                 cellRenderer      = {cellRenderer}
                 columnCount       = {colCount}
                 height            = {height}
-                width             = {width}
+                width             = {colCount * COLUMN_WIDTH}
                 rowCount          = {rowCount}
                 columnWidth       = {COLUMN_WIDTH}
                 rowHeight         = {COLUMN_HEIGHT}

@@ -16,7 +16,7 @@ const Person = () => {
     <Container className="Person">
       <Row className="position-sticky">
         <Col>
-          <h1 className="my-5">{person?.data?.title}</h1>
+          <h1 className="mb-5">{person?.data?.title}</h1>
         </Col>
       </Row>
       <Row>

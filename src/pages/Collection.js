@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Nav } from 'react-bootstrap';
 import { useQueryParam, StringParam } from 'use-query-params';
-import { CollectionRoute } from '../constants';
 import { useGetMedias, useGetMediaFacets } from '../hooks';
 import { getLabel as l } from '../utils';
 import CollectionGrid from '../components/CollectionGrid';
@@ -26,13 +25,9 @@ const Collection = () => {
   return (
     <Container className="Collection">
 
-      <Row>
-        <h1 className="my-5">{CollectionRoute.label.toUpperCase()}</h1>
-      </Row>
-
       <Row className="position-sticky">
         <Nav
-          className         = "media-type-facet"
+          className         = "media-type-facet justify-content-center"
           defaultActiveKey  = {TYPE_FACET_ALL}
           activeKey         = {queryType}
           onSelect          = {mediaTypeFacet_handleSelect}

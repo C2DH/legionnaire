@@ -17,7 +17,7 @@ const ParticlesControls = ({
   }) => {
 
   return (
-    <Form className="ParticlesControls">
+    <Form className="ParticlesControls text-light">
       <Row className="align-items-center">
         <Form.Label column>Particles</Form.Label>
         <Col>{count.toLocaleString()}</Col>

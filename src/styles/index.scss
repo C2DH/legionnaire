@@ -11,14 +11,13 @@ body, html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  background-color: var(--bs-dark);
-  color: var(--bs-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding-top: 65px;
+  overflow: scroll;
 }
 
 code {
@@ -27,7 +26,16 @@ code {
 }
 
 h1{
-  font-family: var(--font-family-titles);
-  color: var(--bs-primary);
-  font-weight: 700;
+  font-weight: normal;
+  font-size: 3rem;
+}
+
+.Modal {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 10000;
+  background-color: var(--bs-dark);
 }

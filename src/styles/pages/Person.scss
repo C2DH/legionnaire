@@ -2,14 +2,17 @@
 
 .Person {
 
+  font-weight: bold;
+
   .position-sticky {
     z-index: 100;
     top: 65px;
     position: sticky;
-    background-color: $dark;
+    background-color: $light;
   }
 
   .label {
-    color: #71613b;
+    color: $secondary;
+    font-weight: bold;
   }
 }

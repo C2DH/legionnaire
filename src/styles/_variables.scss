@@ -1,12 +1,9 @@
-$primary: #96804e;
-$dark: #272425;
-$link-hover-color: #78663e;
+$primary: #E7B12D;
+$secondary: #878787;
+$dark: black;
+$light: #FFF;
+$link-hover-color: $primary;
 $link-hover-dark: #525051;
+$body-color: black;
 
-$font-size-base: 1.2rem;
 $line-height-base: 1.75;
-
-$font-family-titles: 'Ashby';
-:root {
-  --font-family-titles: 'Ashby';
-}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import { BrowseRoute } from '../constants';
 import { useGetPeople } from '../hooks';
 import PeopleGrid from '../components/PeopleGrid';
 
@@ -11,10 +10,6 @@ const Browse = () => {
 
   return (
     <Container>
-      <Row>
-        <h1 className="my-5">{BrowseRoute.label.toUpperCase()}</h1>
-      </Row>
-
       <Row>
         {people &&
           <PeopleGrid
