@@ -75,7 +75,7 @@ const EventMap = ({ events }) => {
       <Marker
         coordinates = {coordinates}
         key         = {coordinates.toString()}
-        className   = "marker"
+        className   = "cluster"
         onClick     = {clickHandler}
         style       = {{
           width: r * 2,

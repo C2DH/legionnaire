@@ -15,7 +15,7 @@
   }
 
   a:hover {
-    color: var(--bs-primary);
+    color: $link-hover-color;
 
     img {
       -webkit-filter: brightness(100%);

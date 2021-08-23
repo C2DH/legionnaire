@@ -7,20 +7,28 @@
   min-height: 300px;
 
   .marker {
+    color: var(--bs-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 200ms;
+
+    &:hover {
+     color: $link-hover-color;
+    }
+  }
+
+  .cluster {
     border-radius: 50%;
-    background-color: rgba($primary, 0.8);
+    background-color: rgba(var(--bs-primary-rgb), 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $dark;
-    border: 1px solid $dark;
+    border: 1px solid var(--bs-dark);
     cursor: pointer;
-    width: 28px;
-    height: 28px;
     transition: background-color 200ms;
 
     &:hover {
-      background-color: rgba($link-hover-color, 0.85);
+      background-color: rgba($link-hover-color, 0.8);
     }
   }
 
@@ -30,7 +38,7 @@
     }
 
     .mapboxgl-popup-content {
-      background-color: $primary;
+    background-color: rgba(var(--bs-primary-rgb), 0.8);
       color: $dark;
 
       .title {
