@@ -4,6 +4,7 @@ import ReactMapboxGl, {
   Cluster,
   Popup,
   ZoomControl,
+  MapContext
 } from 'react-mapbox-gl';
 import mapboxgl from 'mapbox-gl';
 //import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
@@ -53,7 +54,7 @@ const Map = ReactMapboxGl({
 })
 
 
-const EventMap = ({ events }) => {
+const EventMap = ({ events, className }) => {
 
   const [zoom, setZoom]                     = useState([5.3]);
   const [center, setCenter]                 = useState([2.1008033, 47.6148384]);
@@ -103,9 +104,9 @@ const EventMap = ({ events }) => {
       style           = {`mapbox://styles/legionnaires/cksklcprka4vr18ntizab6qea`}
       center          = {center}
       zoom            = {zoom}
-      className       = "EventMap"
+      className       = {`EventMap ${className}`}
       onClick         = {() => setSelectedEvents(null)}
-      onZoomEnd       = {e => move(e.transform._center, e.transform._zoom)}
+      onZoomEnd       = {map => move(map.transform._center, map.transform._zoom)}
     >
       <ZoomControl position="topLeft" className="zoomControl"/>
       <Cluster
@@ -144,6 +145,12 @@ const EventMap = ({ events }) => {
           ))}
         </Popup>
       )}
+
+      <MapContext.Consumer>
+        {(map) => {
+          map.on("wheel", e => !e.originalEvent.ctrlKey && !e.originalEvent.metaKey && e.preventDefault());
+        }}
+      </MapContext.Consumer>
 
     </Map>
   )
