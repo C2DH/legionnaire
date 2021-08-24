@@ -1,0 +1,7 @@
+.EventCard {
+  font-weight: bold;
+
+  div::first-letter {
+    text-transform: uppercase;
+  }
+}

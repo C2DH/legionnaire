@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useGetPerson, useGetEventsByPersonId } from '../hooks';
 import EventMap from '../components/EventMap';
+import EventCard from '../components/EventCard';
 
 import '../styles/pages/Person.scss';
 
@@ -11,104 +12,65 @@ const Person = () => {
   const { slug } = useParams();
   const [{ person }] = useGetPerson(slug);
   const [{ events, eventsByType }] = useGetEventsByPersonId(person?.id);
+  console.log(eventsByType);
 
   return (
     <Container className="Person">
       <Row className="position-sticky">
         <Col>
-          <h1 className="mb-5">{person?.data?.title}</h1>
+          <h1 className="my-2">{person?.data?.title}</h1>
         </Col>
       </Row>
-      <Row>
+      <Row className="mt-5">
         <Col lg={7}>
-          {eventsByType?.birth &&
-            <Row>
-              <Col sm={5}>
-                <div className="label">DATE DE NAISSANCE</div>
-                <div>{eventsByType.birth[0].data.date}</div>
-              </Col>
-              <Col>
-                <div className="label">LIEU DE NAISSANCE</div>
-                <div>
-                  {eventsByType.birth[0].data.place.data.city} ({eventsByType.birth[0].data.place.data.country})
-                </div>
-              </Col>
-            </Row>
-          }
-          {eventsByType?.residence &&
-            <Row>
-              <Col sm={5}>
-                <div className="label">DATE DE RÉSIDENCE</div>
-                {eventsByType?.residence.map(residence =>
-                  <div key={residence.slug}>{residence.data.date}</div>
-                )}
-              </Col>
-              <Col>
-                <div className="label">LIEU DE RÉSIDENCE</div>
-                {eventsByType?.residence.map(residence =>
-                  <div key={residence.slug}>
-                    {residence.data.place.data.city} ({residence.data.place.data.country})
-                  </div>
-                )}
-              </Col>
-            </Row>
-          }
-          {eventsByType?.enrollment &&
-            <Row>
-              <Col sm={5}>
-                <div className="label">DATE D'ENGAGEMENT</div>
-                {eventsByType?.enrollment.map(enrollment =>
-                  <div key={enrollment.slug}>{enrollment.data.date}</div>
-                )}
-              </Col>
-              <Col>
-                <div className="label">LIEU D'ENGAGEMENT</div>
-                {eventsByType?.enrollment.map(enrollment =>
-                  <div key={enrollment.slug}>
-                    {enrollment.data.place.data.city} ({enrollment.data.place.data.country})
-                  </div>
-                )}
-              </Col>
-            </Row>
-          }
-          {eventsByType?.depot &&
-            <Row>
-              <Col sm={5}>
-                <div className="label">DATE DÉPOT</div>
-                {eventsByType?.depot.map(depot =>
-                  <div key={depot.slug}>{depot.data.date}</div>
-                )}
-              </Col>
-              <Col>
-                <div className="label">LIEU DÉPOT</div>
-                {eventsByType?.depot.map(depot =>
-                  <div key={depot.slug}>
-                    {depot.data.place.data.city} ({depot.data.place.data.country})
-                  </div>
-                )}
-              </Col>
-            </Row>
-          }
-          {eventsByType?.death &&
-            <Row>
-              <Col sm={5}>
-                <div className="label">DATE DE DÈCÈS</div>
-                <div>{eventsByType.death[0].data.date}</div>
-              </Col>
-              <Col>
-                <div className="label">LIEU DE DÈCÈS</div>
-                <div>
-                  {eventsByType.death[0].data.place.data.city} ({eventsByType.death[0].data.place.data.country})
-                </div>
-              </Col>
-            </Row>
-          }
+          {eventsByType?.birth && <EventCard type="birth" events={eventsByType.birth} />}
+          {eventsByType?.residence && <EventCard type="residence" events={eventsByType.residence} />}
+          {eventsByType?.enrollment && <EventCard type="enrollment" events={eventsByType.enrollment} />}
+          {eventsByType?.depot && <EventCard type="depot" events={eventsByType.depot} />}
+          {eventsByType?.death && <EventCard type="death" events={eventsByType.death} />}
         </Col>
         <Col lg>
         </Col>
       </Row>
-      <Row className="mt-5">
+      <Row className="my-5">
         <EventMap events={events} />
+      </Row>
+      <Row>
+        <Col md={6} className="mb-4">
+          <h2 className="mb-3">BIOGRAPHY</h2>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
+Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
+
+Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet. »
+Lorem ipsum (version originale)
+(En gras, le lipsum habituellement utilisé) extrait de : Cicéron 45 AC, De finibus bonorum et malorum, livre I, X, 32
+
+« [32] Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
+        </Col>
+        <Col md={6}>
+          <ul>
+            {person?.documents.map(doc =>
+              doc.type === 'link' &&
+                <li key={doc.slug}>
+                  <a
+                    href    = {doc.data.url}
+                    target  = "_blank"
+                    rel     = "noreferrer"
+                  >
+                    {doc.data.source}
+                  </a>
+                </li>
+            )}
+          </ul>
+
+          {person?.documents.map(doc =>
+            (doc.type === 'image' || doc.type === 'pdf') &&
+              <div className="media" key={doc.slug}>
+                <img src={doc.data.resolutions?.medium.url} alt={doc.title} />
+                {doc.data.source}
+              </div>
+          )}
+        </Col>
       </Row>
     </Container>
   )
