@@ -26,6 +26,7 @@ import {
   faHospitalSymbol,
   faCross
 } from '@fortawesome/free-solid-svg-icons';
+import { parseDate } from '../utils';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../styles/components/EventMap.scss';
@@ -64,12 +65,16 @@ const EventMap = ({ events, className }) => {
 
     const r             = 15 + pointCount;
     const clickHandler  = () => {
-      if(zoom >= 10)
-        marker_clickHandler(
-          getLeaves().map(marker =>
-            find(events, {id:parseInt(marker.key)})
-          )
-        )
+
+      const clusterEvents = getLeaves()
+        .map(marker => find(events, {id:parseInt(marker.key)}))
+
+      // Check if all events are at the same place
+      if(clusterEvents.filter(event => event.data.place.id !== clusterEvents[0].data.place.id).length === 0) {
+        marker_clickHandler(clusterEvents);
+        //  To fix an issue with the zoomOnClick: The first setCenter block the zoom. The second is needed to center the marker
+        setTimeout(_ => setCenter(clusterEvents[0].coordinates));
+      }
     }
 
     return (
@@ -101,17 +106,18 @@ const EventMap = ({ events, className }) => {
 
   return (
     <Map
-      style           = {`mapbox://styles/legionnaires/cksklcprka4vr18ntizab6qea`}
-      center          = {center}
-      zoom            = {zoom}
-      className       = {`EventMap ${className}`}
-      onClick         = {() => setSelectedEvents(null)}
-      onZoomEnd       = {map => move(map.transform._center, map.transform._zoom)}
+      style                   = {`mapbox://styles/legionnaires/cksklcprka4vr18ntizab6qea`}
+      className               = {`EventMap ${className}`}
+      center                  = {center}
+      zoom                    = {zoom}
+      renderChildrenInPortal  = {true}
+      onClick                 = {() => setSelectedEvents(null)}
+      onZoomEnd               = {map => move(map.transform._center, map.transform._zoom)}
     >
       <ZoomControl position="topLeft" className="zoomControl"/>
       <Cluster
         ClusterMarkerFactory  = {clusterMarker}
-        zoomOnClick           = {zoom < 10}
+        zoomOnClick           = {true}
         zoomOnClickPadding    = {100}
         maxZoom               = {20}
       >
@@ -120,7 +126,7 @@ const EventMap = ({ events, className }) => {
             key         = {event.id}
             coordinates = {event.coordinates}
             className   = "marker"
-            onClick     = {() => marker_clickHandler([event])}
+            onClick     = {_ => marker_clickHandler([event])}
           >
             <FontAwesomeIcon icon={icons[event.data.event_type]} />
           </Marker>
@@ -140,7 +146,7 @@ const EventMap = ({ events, className }) => {
           </div>
           {selectedEvents.map(event => (
             <div key={event.id}>
-              {event.data.date} - {event.title}
+              {parseDate(event.data.date)} - {event.title}
             </div>
           ))}
         </Popup>

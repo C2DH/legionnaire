@@ -10,7 +10,7 @@ const Event = ({ type, events }) => (
     <Col sm={5}>
       <h2>{l(`event.${type}.date.title`)}</h2>
       {events.map(event =>
-        <div key={event.slug}>{event.data.date && parseDate(event.data.date)}</div>
+        <div key={event.slug}>{event.data.date && parseDate(event.data.date, true)}</div>
       )}
     </Col>
     <Col>
