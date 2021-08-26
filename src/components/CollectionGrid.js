@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Grid, WindowScroller, AutoSizer } from 'react-virtualized';
 import CollectionCard from './CollectionCard';
 
-const COLUMN_WIDTH = 225;
-const COLUMN_HEIGHT = 370;
+const COLUMN_WIDTH = 178;
+const COLUMN_HEIGHT = 212;
 
 const CollectionGrid = ({ items, canLoadMore=false, loadMore }) => {
 
@@ -13,13 +13,13 @@ const CollectionGrid = ({ items, canLoadMore=false, loadMore }) => {
   function cellRenderer({ columnIndex, key, rowIndex, style }) {
 
     const i = rowIndex * colCount + columnIndex
-    const item = items[i]
+    const item = items[i];
 
     if (!item) return null;
 
     return (
       <div key={key} style={{ ...style }}>
-        <div style={{ padding: 5, height: '100%' }}>
+        <div style={{ padding: 17, height: '100%' }}>
           <CollectionCard doc={item} />
         </div>
      </div>
@@ -50,7 +50,6 @@ const CollectionGrid = ({ items, canLoadMore=false, loadMore }) => {
             <div ref={registerChild}>
               <Grid
                 autoHeight
-                className         = "mx-auto"
                 cellRenderer      = {cellRenderer}
                 columnCount       = {colCount}
                 height            = {height}

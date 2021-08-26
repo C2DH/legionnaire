@@ -1,15 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import '../styles/components/CollectionCard.scss';
 
 
 const CollectionCard = ({ doc }) => (
-  <div className="CollectionCard">
+  <Link className="CollectionCard" to={`/collection/${doc.slug}`}>
     <div className="picture">
-      <img src={doc.data.resolutions?.thumbnail.url} alt={doc.title} />
+      <div>
+        <img src={doc.data.resolutions?.thumbnail.url} alt={doc.title} />
+      </div>
     </div>
     <div>{ doc.title }</div>
-  </div>
+  </Link>
 );
 
 export default CollectionCard;

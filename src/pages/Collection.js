@@ -27,7 +27,7 @@ const Collection = () => {
 
       <Row className="position-sticky">
         <Nav
-          className         = "media-type-facet justify-content-center"
+          className         = "media-type-facet"
           defaultActiveKey  = {TYPE_FACET_ALL}
           activeKey         = {queryType}
           onSelect          = {mediaTypeFacet_handleSelect}
