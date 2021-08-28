@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useEffect } from 'react'
 import { Switch, Route, useLocation } from "react-router-dom"
 import ReactGA from 'react-ga'
 import { QueryParamProvider } from 'use-query-params';
-import AppRouteLoading from './pages/AppRouteLoading'
+import AppRouteLoading from './pages/AppRouteLoading';
 
 /* Pages */
 const Home = lazy(() => import('./pages/Home'));
@@ -11,6 +11,7 @@ const Browse = lazy(() => import('./pages/Browse'));
 const Person = lazy(() => import('./pages/Person'));
 const Search = lazy(() => import('./pages/Search'));
 const Collection = lazy(() => import('./pages/Collection'));
+const Media = lazy(() => import('./pages/Media'));
 const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 /* Pages routing by language */
@@ -56,6 +57,9 @@ const AppRoutes = ({enableGA=false}) => {
           </Route>
           <Route exact path="/collection">
             <Collection />
+          </Route>
+          <Route exact path="/collection/:slug">
+            <Media />
           </Route>
           <Route exact path="/terms">
             <TermsOfUse />

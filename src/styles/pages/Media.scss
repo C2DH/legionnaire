@@ -1,0 +1,62 @@
+.Media {
+
+  padding: 0 3rem;
+
+  .metadata {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+  }
+
+  .picture {
+
+    background-color: var(--bs-gray-200);
+    border: 8px solid var(--bs-primary);
+    height: calc(100vh - 16rem);
+    position: relative;
+
+    .tools {
+      position: absolute;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      top: 20px;
+      left: 20px;
+
+      button {
+        border: none;
+        background-color: rgba(var(--bs-primary-rgb), .7);
+        height: 26px;
+        width: 26px;
+        font-weight: bold;
+        line-height: 24px;
+
+        &.zoomIn {
+          border-bottom: 1px solid rgba(var(--bs-dark-rgb), .1);
+        }
+      }
+    }
+
+    .react-transform-wrapper {
+      height: 100%;
+      width: 100%;
+
+      .react-transform-component {
+      img {
+        max-width: 100%;
+        max-height: calc(100vh - 16rem);
+      }
+      }
+    }
+  }
+}

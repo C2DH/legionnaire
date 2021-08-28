@@ -1,9 +1,10 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useGetPerson, useGetEventsByPersonId } from '../hooks';
 import EventMap from '../components/EventMap';
 import EventCard from '../components/EventCard';
+import { MediaRoute } from '../constants';
 
 import '../styles/pages/Person.scss';
 
@@ -73,7 +74,9 @@ Lorem ipsum (version originale)
             {person?.documents.map(doc =>
               (doc.type === 'image' || doc.type === 'pdf') &&
                 <div className="media" key={doc.slug}>
-                  <img src={doc.data.resolutions?.medium.url} alt={doc.title} />
+                  <Link to={`${MediaRoute.to}${doc.slug}`}>
+                    <img src={doc.data.resolutions?.medium.url} alt={doc.title} />
+                  </Link>
                   {doc.data.source}
                 </div>
             )}

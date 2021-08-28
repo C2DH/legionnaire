@@ -100,6 +100,21 @@ export function useGetEventsByPersonId(id) {
 }
 
 /**
+ * Hook to get a media identified by its id from the backend
+ * @param   id  id or slug of the media to get
+ */
+export function useGetMedia(id) {
+  return useRunRj(
+    docState,
+    [ id ],
+    true,
+    (state, { getData }) => ({
+      media: getData(state)
+    })
+  );
+}
+
+/**
  * Hook to get paginated list of medias
  * @param   offset  offset of the current page to load
  */

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { PersonRoute } from '../constants';
 
 import '../styles/components/PersonCard.scss';
 
@@ -10,7 +11,7 @@ const PersonCard = ({ person, imageHeight }) => {
 
   return (
     <div className="PersonCard">
-      <Link to={`/browse/person/${person.slug}`}>
+      <Link to={`${PersonRoute.to}${person.slug}`}>
       {/*
       <Link to={{
           pathname: `/browse/person/${person.slug}`,
