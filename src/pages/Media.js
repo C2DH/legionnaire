@@ -36,7 +36,7 @@ const Media = () => {
 
         <Col md={8} className="h-100">
           <div className="picture">
-            <TransformWrapper>
+            <TransformWrapper wheel={{ step: 0.1 }}>
               {({ zoomIn, zoomOut, centerView }) => (
                 <React.Fragment>
                   <div className="tools">
