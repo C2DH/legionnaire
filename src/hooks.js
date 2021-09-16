@@ -7,9 +7,9 @@ import {
   eventsState,
   mediasState
 } from './state';
+import { MEDIA_VIGNETTE } from './constants';
 
 const ALL_RECORDS = 10000;
-const MEDIA_PHOTO = "photo";
 const EVENT_BIRTH = "birth";
 
 /**
@@ -52,8 +52,8 @@ export function useGetPeople(offset = 0) {
       people: (getList(state) || []).map(person => {
         for(const related of person.documents) {
 
-          //  Get the firtst photo from related documents and put it in the illustration property
-          if(!person.illustration && related.data.type === MEDIA_PHOTO)
+          //  Get the vignette or firts photo from related documents and put it in the illustration property
+          if(related.data.type === MEDIA_VIGNETTE /*|| (!person.illustration && related.data.type === MEDIA_PHOTO)*/)
             person.illustration = related;
 
           // Get the birth date from related documents and put the year in the data.birth_year property

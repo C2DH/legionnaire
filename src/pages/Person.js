@@ -5,6 +5,11 @@ import { useGetPerson, useGetEventsByPersonId } from '../hooks';
 import EventMap from '../components/EventMap';
 import EventCard from '../components/EventCard';
 import { MediaRoute } from '../constants';
+import {
+  TYPE_IMAGE,
+  TYPE_PDF,
+  MEDIA_VIGNETTE
+} from '../constants';
 
 import '../styles/pages/Person.scss';
 
@@ -72,7 +77,7 @@ Lorem ipsum (version originale)
             </ul>
 
             {person?.documents.map(doc =>
-              (doc.type === 'image' || doc.type === 'pdf') &&
+              ((doc.type === TYPE_IMAGE || doc.type === TYPE_PDF) && doc.data.type !== MEDIA_VIGNETTE) &&
                 <div className="media" key={doc.slug}>
                   <Link to={`${MediaRoute.to}${doc.slug}`}>
                     <img src={doc.data.resolutions?.medium.url} alt={doc.title} />

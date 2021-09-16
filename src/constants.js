@@ -11,3 +11,8 @@ export const PrimaryRoutes = [
   SearchRoute,
   CollectionRoute
 ];
+
+export const TYPE_IMAGE = "image";
+export const TYPE_PDF = "pdf";
+
+export const MEDIA_VIGNETTE = "vignette";
