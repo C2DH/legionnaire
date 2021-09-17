@@ -106,7 +106,7 @@ const EventMap = ({ events, className }) => {
 
   return (
     <Map
-      style                   = {`mapbox://styles/legionnaires/cksklcprka4vr18ntizab6qea`}
+      style                   = {`mapbox://styles/legionnaires/ckto0cfh40okl17pmek6tmiuz`}
       className               = {`EventMap ${className}`}
       center                  = {center}
       zoom                    = {zoom}
