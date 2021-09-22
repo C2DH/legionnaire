@@ -13,8 +13,6 @@ const Media = () => {
   const { slug }    = useParams();
   const [{ media }] = useGetMedia(slug);
 
-  console.log(media);
-
   return (
     <Container fluid className="Media">
       <Row className="h-100">

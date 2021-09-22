@@ -1,0 +1,22 @@
+.Search {
+
+  .search-form {
+    border-bottom: 4px solid var(--bs-dark);
+    display: flex;
+    align-items: center;
+
+    .search-input {
+      border: none;
+
+      &:focus {
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .PersonRecord {
+    align-items: center;
+    word-wrap: break-word;
+  }
+}

@@ -4,6 +4,7 @@ import {
   docState,
   docsState,
   peopleState,
+  searchPeopleState,
   eventsState,
   mediasState
 } from './state';
@@ -71,24 +72,37 @@ export function useGetPeople(offset = 0) {
 }
 
 /**
- * Hook to get events of a person identified by its id from the backend
- * @param   id  id of the person to get
+ * Hook to get events of people identified by their id from the backend
+ * @param   id      id of the person or array of id of people to get
+ * @param   types   types of event to get. All events are retrieved if not specified
  */
-export function useGetEventsByPersonId(id) {
+export function useGetEventsByPersonId(id, types) {
 
   //  Memorize params to avoid infinite loop
-  const params = useMemo(() => (
-    id ?
-      {
-        filters: {
-          data__type: 'event',
-          documents: id
-        },
-        detailed: true,
-        orderby: 'data__date',
-        limit: ALL_RECORDS
-      }: null
-  ), [id]);
+  const params = useMemo(() => {
+
+    if(!id) return null;
+
+    let params = {
+      filters: {
+        data__type: 'event'
+      },
+      detailed: true,
+      orderby: 'data__date',
+      limit: ALL_RECORDS
+    };
+
+    if(id.constructor === Array)
+      params.filters.documents__in = id;
+    else
+      params.filters.documents = id;
+
+    if(types)
+      params.filters.data__event_type__in = types;
+
+    return params;
+
+  }, [id, types]);
 
   const result = useRunRj(
     eventsState,
@@ -165,5 +179,30 @@ export function useGetMediaFacets() {
       mediaTypeFacets: getData(state)?.facets?.data__type,
       count: getData(state)?.count
     })
+  );
+}
+
+/**
+ * Hook to do a search from the backend
+ * @param   q       query to search
+ */
+export function useSearch(query='') {
+
+  //  Memorize params to avoid infinite loop
+  const params = useMemo(() => (
+    query ?
+      {
+        filters: {
+          data__type: 'person'
+        },
+        q: `${query}*`,
+        limit: ALL_RECORDS
+      }: null
+  ), [query]);
+
+  return useRunRj(
+    searchPeopleState,
+    [ deps.maybeNull(params) ],
+    true
   );
 }

@@ -28,7 +28,26 @@ export const peopleState = rj(
     pageSize: 100,
     pagination: limitOffsetPaginationAdapter,
   }), {
+    effect: getDocuments
+  }
+);
+
+export const searchPeopleState = rj(
+  rjCache({
+    ns: 'persons',
+    size: 50
+  }), {
     effect: getDocuments,
+
+    //  Selector to get events in an object with the event type as key
+    selectors: ({ getData }) => ({
+      getPeople: state => getData(state)?.results,
+      getPeopleIds: state => getData(state)?.results.map(person => person.id)
+    }),
+    computed: {
+      people: 'getPeople',
+      peopleIds: 'getPeopleIds'
+    }
   }
 );
 
@@ -39,7 +58,7 @@ export const eventsState = rj(
   }), {
     effect: getDocuments,
 
-    //  Selecgtor to get events in an object with the event type as key
+    //  Selector to get events in an object with the event type as key
     selectors: ({ getData }) => ({
       getEvents: state => getData(state)?.results.map(
         event => ({
@@ -53,9 +72,11 @@ export const eventsState = rj(
         const events = getData(state)?.results;
 
         for(const event of events || []) {
-          const type = event.data.event_type;
-          eventByTypes[type] = eventByTypes[type] || [];
-          eventByTypes[type].push(event);
+          const personId  = event.data.person.id;
+          const type      = event.data.event_type;
+          eventByTypes[personId]= eventByTypes[personId] || {};
+          eventByTypes[personId][type] = eventByTypes[personId][type] || [];
+          eventByTypes[personId][type].push(event);
         }
 
         return eventByTypes;
