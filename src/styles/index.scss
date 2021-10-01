@@ -5,6 +5,11 @@
 // Boostrap scss
 @import '~bootstrap/scss/bootstrap';
 
+
+:root {
+  --link-hover-color: #{$link-hover-color};
+}
+
 body, html {
   height: 100%;
 }
