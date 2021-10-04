@@ -23,5 +23,6 @@
   "event.journey": "Parcours militaire",
   "event.wounded": "Blessure",
   "event.hospital": "Hôpital",
-  "event.wedding": "Mariage"
+  "event.wedding": "Mariage",
+  "event.child": "Enfant"
 }

@@ -10,7 +10,7 @@ import ReactMapboxGl, {
 import mapboxgl from 'mapbox-gl';
 //import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; // eslint-disable-line import/no-webpack-loader-syntax
-import { find, findIndex } from 'lodash';
+import { find, findIndex, last } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBirthdayCake,
@@ -57,50 +57,80 @@ const Map = ReactMapboxGl({
   accessToken: "pk.eyJ1IjoibGVnaW9ubmFpcmVzIiwiYSI6ImNrcm02cGxvYTAwa2IzMm85MG02b2VqMjYifQ.OuFSbi7i0SVS8O8QnOjpKA"
 });
 
-const DEFAULT_ZOOM = 5.3;
+const FITBOUNDS_OPTIONS = {padding: 200};
 
 const EventMap = ({ events = [], className }) => {
 
-  const [zoom, setZoom]                       = useState([3]);
   const [center, setCenter]                   = useState([2.1008033, 47.6148384]);
+  const [fitBounds, setFitBounds]             = useState(null);
   const [selectedEvents, setSelectedEvents]   = useState(null);
   const [lineCoordinates, setLineCoordinates] = useState([]);
   const [isPlaying, setPlaying]               = useState(false);
 
+
   useEffect(_ => {
     if(events.length === 0) return;
+
+    let bounds = new mapboxgl.LngLatBounds();
+    events.forEach(event => bounds.extend(event.coordinates));
+    setFitBounds(bounds.toArray());
 
     const coordinates = events.slice(0, -1).map((event, i) => [
         event.id,
         parseFloat(event.coordinates[0]),
         parseFloat(event.coordinates[1]),
-        parseFloat(events[i + 1].coordinates[0]),
-        parseFloat(events[i + 1].coordinates[1])
+        parseFloat(events[i+1].coordinates[0]),
+        parseFloat(events[i+1].coordinates[1]),
+        50
     ]);
 
     setLineCoordinates(coordinates);
   }, [events]);
 
+
+  const nextEvent = useCallback(eventId => {
+    if(!isPlaying) return;
+
+    let i           = findIndex(events, {id: eventId});
+
+    if(i === events.length - 1) {
+      setPlaying(false);
+      return;
+    }
+
+    const selEvents = [events[++i]];
+    const placeId   = selEvents[0].data.place.id;
+
+    //  Check if next events have the same place
+    events.slice(i+1).reduce((isNext, event) => isNext && event.data.place.id === placeId && selEvents.push(event), true);
+
+    setSelectedEvents(selEvents);
+  //  setCenter(selEvents[0].coordinates);
+
+  }, [events, isPlaying]);
+
+
   useEffect(_ => {
-   if(isPlaying && selectedEvents) {
+    if(isPlaying && selectedEvents) {
 
-     const i = findIndex(events, selectedEvents[0]);
+      const i = findIndex(events, selectedEvents[0]);
 
-     if(i < events.length - 1) {
-       setLineCoordinates(lineCoordinates =>
-         [...lineCoordinates, [
-           events[i].id,
-           parseFloat(events[i].coordinates[0]),
-           parseFloat(events[i].coordinates[1]),
-           parseFloat(events[i + 1].coordinates[0]),
-           parseFloat(events[i + 1].coordinates[1])
-         ]]
-       );
-     } else {
-       setPlaying(false);
-     }
-   }
- }, [selectedEvents, isPlaying, events]);
+      if(i > 0) {
+        setFitBounds([events[i-1].coordinates, events[i].coordinates]);
+        setLineCoordinates(lineCoordinates =>
+          [...lineCoordinates, [
+            last(selectedEvents).id,
+            parseFloat(events[i-1].coordinates[0]),
+            parseFloat(events[i-1].coordinates[1]),
+            parseFloat(events[i].coordinates[0]),
+            parseFloat(events[i].coordinates[1])
+          ]]
+        );
+      } else {
+        setTimeout(_ => nextEvent(last(selectedEvents).id), 2000);
+      }
+    }
+  }, [selectedEvents, isPlaying, events, nextEvent]);
 
 
   const clusterMarker = (coordinates, pointCount, getLeaves) => {
@@ -112,10 +142,12 @@ const EventMap = ({ events = [], className }) => {
         .map(marker => find(events, {id: parseInt(marker.key)}))
 
       // Check if all events are at the same place
-      if(zoom >= 12 || clusterEvents.filter(event => event.data.place.id !== clusterEvents[0].data.place.id).length === 0) {
+      if(clusterEvents.filter(event => event.data.place.id !== clusterEvents[0].data.place.id).length === 0)
         marker_clickHandler(clusterEvents);
-        //  To fix an issue with the zoomOnClick: The first setCenter block the zoom. The second is needed to center the marker
-        setTimeout(_ => setCenter(clusterEvents[0].coordinates));
+      else {
+        let bounds = new mapboxgl.LngLatBounds();
+        clusterEvents.forEach(event => bounds.extend(event.coordinates));
+        setFitBounds(bounds.toArray());
       }
     }
 
@@ -137,11 +169,6 @@ const EventMap = ({ events = [], className }) => {
     );
   }
 
-  const move = (coordinates, zoom) => {
-    setCenter(coordinates);
-    setZoom([zoom]);
-  }
-
   const marker_clickHandler = event => {
     setSelectedEvents(event);
     setCenter(event[0].coordinates);
@@ -151,23 +178,18 @@ const EventMap = ({ events = [], className }) => {
 
   const playButton_clickHandler = () => {
     if(!isPlaying) {
-      const i = selectedEvents ? findIndex(events, selectedEvents[0]) : 0;
+      let i = selectedEvents ? findIndex(events, last(selectedEvents)) + 1 : 0;
+      if(i === events.length) i = 0;
       marker_clickHandler([events[i]]);
       setLineCoordinates([]);
+
+      // if(i === 0)
+      //   setTimeout(_ => setSelectedEvents([events[1]]), 2000);
     }
 
     setPlaying(!isPlaying);
   }
 
-  const nextEvent = useCallback(eventId => {
-    if(!isPlaying) return;
-
-    const i     = findIndex(events, {id: eventId});
-    const event = events[i + 1];
-
-    setSelectedEvents([event]);
-    setCenter(event.coordinates);
-  }, [events, isPlaying]);
 
   return (
     <div className={`EventMap ${className}`}>
@@ -204,17 +226,14 @@ const EventMap = ({ events = [], className }) => {
         style                   = {`mapbox://styles/legionnaires/ckto0cfh40okl17pmek6tmiuz`}
         className               = "map"
         center                  = {center}
-        zoom                    = {zoom}
-        onStyleLoad             = {() => setZoom([DEFAULT_ZOOM]) /* To fix an issue with layer */}
+        fitBounds               = {fitBounds}
+        fitBoundsOptions        = {FITBOUNDS_OPTIONS}
         renderChildrenInPortal  = {true}
         onClick                 = {() => setSelectedEvents(null)}
-        onZoomEnd               = {map => move(map.transform._center, map.transform._zoom)}
       >
         <ZoomControl position="topLeft" className="zoomControl"/>
         <Cluster
           ClusterMarkerFactory  = {clusterMarker}
-          zoomOnClick           = {true}
-          zoomOnClickPadding    = {100}
           maxZoom               = {20}
         >
           {events.map(event => (
@@ -237,6 +256,7 @@ const EventMap = ({ events = [], className }) => {
             startY          = {coordinates[2]}
             endX            = {coordinates[3]}
             endY            = {coordinates[4]}
+            speed           = {coordinates[5]}
             onAnimationEnd  = {nextEvent}
           />
         ))}
