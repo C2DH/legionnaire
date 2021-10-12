@@ -16,7 +16,7 @@ import '../styles/pages/Person.scss';
 const Person = () => {
 
   const { slug } = useParams();
-  const [{ person }] = useGetPerson(slug);
+  const [{ person, thumbnail }] = useGetPerson(slug);
   const [{ events, eventsByType }] = useGetEventsByPersonId(person?.id);
   const { birth, residence, enrollment, depot, death } = eventsByType[person?.id] || {};
 
@@ -34,7 +34,16 @@ const Person = () => {
 
       <Container className="mt-5">
         <Row>
-          <Col lg={7}>
+          {thumbnail &&
+            <Col lg={2} md={3}>
+              <div className="media thumbnail mb-5">
+                <Link to={`${MediaRoute.to}${thumbnail.slug}`}>
+                  <img src={thumbnail.data.resolutions?.medium.url} alt={thumbnail.title} />
+                </Link>
+              </div>
+            </Col>
+          }
+          <Col lg={7} md={9}>
             {birth && <EventCard type="birth" events={birth} />}
             {residence && <EventCard type="residence" events={residence} />}
             {enrollment && <EventCard type="enrollment" events={enrollment} />}

@@ -3,6 +3,7 @@ import { useRunRj, deps } from 'react-rocketjump';
 import {
   docState,
   docsState,
+  personState,
   peopleState,
   searchPeopleState,
   eventsState,
@@ -19,12 +20,9 @@ const EVENT_BIRTH = "birth";
  */
 export function useGetPerson(id) {
   return useRunRj(
-    docState,
+    personState,
     [ id ],
-    true,
-    (state, { getData }) => ({
-      person: getData(state)
-    })
+    true
   );
 }
 

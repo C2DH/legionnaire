@@ -3,6 +3,7 @@ import rjCache from 'react-rocketjump/plugins/cache';
 import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
 
 import { getDocument, getDocuments } from './api';
+import { MEDIA_VIGNETTE } from './constants';
 
 
 export const docState = rj(
@@ -19,9 +20,28 @@ export const docsState = rj(
   }), getDocuments
 );
 
+export const personState = rj(
+  rjCache({
+    ns: 'person',
+    size: 50
+  }), {
+    effect: getDocument,
+
+    //  Selector to get events in an object with the event type as key
+    selectors: ({ getData }) => ({
+      getPerson: state => getData(state),
+      getThumbnail: state => getData(state)?.documents.filter(doc => doc.data.type === MEDIA_VIGNETTE)[0]
+    }),
+    computed: {
+      person: 'getPerson',
+      thumbnail: 'getThumbnail'
+    }
+  }
+);
+
 export const peopleState = rj(
   rjCache({
-    ns: 'persons',
+    ns: 'people',
     size: 50
   }),
   rjList({
