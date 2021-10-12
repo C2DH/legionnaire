@@ -1,0 +1,154 @@
+.EventTimeline {
+
+  position: absolute;
+  right: 0;
+  height: 100%;
+
+  .tools {
+    position: absolute;
+    right: 13px;
+    top: 25px;
+    z-index: 60;
+    line-height: 1;
+
+    button {
+      padding: 0;
+      border: none;
+      line-height: 1;
+      box-shadow: unset;
+
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .side-menu {
+    position: absolute;
+    top: 0;
+    right: -250px;
+    height: 100%;
+    width: 300px;
+    z-index: 50;
+    color: var(--bs-light);
+    font-size: 0.75rem;
+    line-height: 1.17;
+    background-color: rgba(var(--bs-dark-rgb), 0.8);
+    transition: right 0.5s;
+    overflow-y: auto;
+    padding-top: 24px;
+
+    .title {
+      margin-left: 24px;
+      opacity: 0.6;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .event-list {
+      position: relative;
+      margin-top: 24px;
+      opacity: 0;
+      transition: opacity 0.5s;
+
+      .item {
+        height: 52px;
+        display: flex;
+        cursor: pointer;
+        padding: 0 10px 0 24px;
+
+        .icon {
+          color: var(--bs-dark);
+          margin-right: 16px;
+          font-weight: bold;
+          line-height: 1.9;
+
+          .back, .border {
+            fill: var(--bs-light);
+          }
+        }
+
+        .info {
+          .type {
+            font-weight: bold;
+            display: block;
+            text-transform: uppercase;
+          }
+
+          .details {
+            opacity: 60%;
+          }
+        }
+
+        &:hover .info {
+          opacity: 0.6;
+        }
+
+        &.selected {
+          .icon {
+            .back, .border {
+              fill: var(--bs-primary);
+            }
+          }
+
+          .info {
+            .type {
+              color: var(--bs-primary);
+            }
+
+            .details {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      &::after {
+        content: '';
+        border-left: 1px dashed var(--bs-light);
+        opacity: 0.6;
+        position: absolute;
+        top: 10px;
+        bottom: 40px;
+        left: 36px;
+        z-index: -1;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+  }
+
+  &:hover, &.open {
+
+    .side-menu {
+      right: 0;
+
+      .event-list {
+        opacity: 1;
+      }
+
+      .title {
+        opacity: 0.6;
+      }
+    }
+  }
+}

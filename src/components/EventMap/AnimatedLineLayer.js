@@ -2,15 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Layer, Feature } from 'react-mapbox-gl';
 
 
-const LAYOUT  = {
-  'line-cap': 'round',
-  'line-join': 'round',
-  'visibility': 'visible'
-};
 const PAINT   = {
-  'line-color': '#ed6498',
-  'line-width': 5,
-  'line-opacity': 0.8
+  'line-width': 2,
+  'line-opacity': 0.5,
+  'line-dasharray': [2, 2]
 };
 
 const SPEED = 250;
@@ -50,7 +45,6 @@ const AnimatedLineLayer = ({ eventId, startX, startY, endX, endY, speed = SPEED,
   return (
     <Layer
       type      = "line"
-      layout    = {LAYOUT}
       paint     = {PAINT}
     >
       <Feature coordinates={[[startX, startY], endCoordinates]} />

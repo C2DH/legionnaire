@@ -1,0 +1,88 @@
+@import '../../variables';
+
+.EventMap {
+
+  height: calc(100vh - 250px);
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+
+  .map {
+    height: 100%;
+    font-family: var(--font-family);
+
+    .marker {
+      cursor: pointer;
+      font-size: 0.75rem;
+      line-height: 1.9;
+      font-weight: bold;
+      color: var(--bs-light);
+
+      &:hover {
+        color: var(--bs-dark);
+        opacity: 0.6;
+        .back {
+          fill: var(--bs-primary);
+        }
+      }
+    }
+
+    .cluster {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--bs-primary);
+      font-size: 1.125rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 3px solid var(--bs-dark);
+      cursor: pointer;
+      transition: background-color 200ms;
+
+      &:hover {
+        background-color: rgba(var(--bs-primary-rgb), 0.6);
+        border-color: rgba(var(--bs-dark-rgb), 0.6);
+      }
+    }
+
+    .popup {
+      .mapboxgl-popup-tip {
+        display: none;
+      }
+
+      .mapboxgl-popup-content {
+        color: $dark;
+        box-shadow: 0px 0px 8px rgba(var(--bs-dark-rgb), 0.4);
+        font-weight: bold;
+
+        .title {
+          color: var(--bs-secondary);
+        }
+      }
+    }
+
+    .zoomControl{
+      left: 20px;
+      top: 20px;
+    }
+
+    .zoomControl button{
+      background-color: rgba($primary, .7)!important;
+    }
+  }
+}
+
+.PinPoint {
+
+  position: relative;
+
+  .label {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+  }
+}

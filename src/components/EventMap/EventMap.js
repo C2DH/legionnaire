@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from 'react-bootstrap';
 import ReactMapboxGl, {
   Marker,
   Cluster,
@@ -11,44 +10,13 @@ import mapboxgl from 'mapbox-gl';
 //import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { find, findIndex, last } from 'lodash';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faBirthdayCake,
-  faSkullCrossbones,
-  faHome,
-  faRing,
-  faUserInjured,
-  faFileSignature,
-  faBabyCarriage,
-  faWarehouse,
-  faMapSigns,
-  faMonument,
-  faSignOutAlt,
-  faHospitalSymbol,
-  faCross,
-  faCirclePlay
-} from '@fortawesome/free-solid-svg-icons';
-import { getLabel as l, parseDate } from '../../utils';
+import { parseDate } from '../../utils';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import AnimatedLineLayer from './AnimatedLineLayer';
-import '../../styles/components/EventMap.scss';
-
-const icons = {
-  birth: faBirthdayCake,
-  death: faSkullCrossbones,
-  residence: faHome,
-  wedding: faRing,
-  wounded: faUserInjured,
-  enrollment: faFileSignature,
-  child: faBabyCarriage,
-  depot: faWarehouse,
-  journey: faMapSigns,
-  monument: faMonument,
-  reform: faSignOutAlt,
-  hospital: faHospitalSymbol,
-  burial: faCross
-}
+import EventTimeline from './EventTimeline';
+import PinPoint from './icons/PinPoint';
+import '../../styles/components/EventMap/EventMap.scss';
 
 // Load worker code separately with worker-loader
 mapboxgl.workerClass = MapboxWorker; // Wire up loaded worker to be used instead of the default
@@ -57,10 +25,18 @@ const Map = ReactMapboxGl({
   accessToken: "pk.eyJ1IjoibGVnaW9ubmFpcmVzIiwiYSI6ImNrcm02cGxvYTAwa2IzMm85MG02b2VqMjYifQ.OuFSbi7i0SVS8O8QnOjpKA"
 });
 
-const FITBOUNDS_OPTIONS = {padding: 200};
+const FITBOUNDS_OPTIONS = {
+  padding: {
+    top:    50,
+    bottom: 50,
+    left:   150,
+    right:  350
+  }
+};
 
 const EventMap = ({ events = [], className }) => {
 
+  const [zoom, setZoom]                       = useState(0);
   const [center, setCenter]                   = useState([2.1008033, 47.6148384]);
   const [fitBounds, setFitBounds]             = useState(null);
   const [selectedEvents, setSelectedEvents]   = useState(null);
@@ -89,12 +65,14 @@ const EventMap = ({ events = [], className }) => {
 
 
   const nextEvent = useCallback(eventId => {
+
     if(!isPlaying) return;
 
     let i           = findIndex(events, {id: eventId});
 
     if(i === events.length - 1) {
       setPlaying(false);
+      setCenter(events[i].coordinates);
       return;
     }
 
@@ -105,7 +83,6 @@ const EventMap = ({ events = [], className }) => {
     events.slice(i+1).reduce((isNext, event) => isNext && event.data.place.id === placeId && selEvents.push(event), true);
 
     setSelectedEvents(selEvents);
-  //  setCenter(selEvents[0].coordinates);
 
   }, [events, isPlaying]);
 
@@ -135,14 +112,13 @@ const EventMap = ({ events = [], className }) => {
 
   const clusterMarker = (coordinates, pointCount, getLeaves) => {
 
-    const r             = 15 + pointCount;
-    const clickHandler  = () => {
+    const clickHandler  = (e, f) => {
 
       const clusterEvents = getLeaves()
         .map(marker => find(events, {id: parseInt(marker.key)}))
 
       // Check if all events are at the same place
-      if(clusterEvents.filter(event => event.data.place.id !== clusterEvents[0].data.place.id).length === 0)
+      if(zoom > 12 || clusterEvents.filter(event => event.data.place.id !== clusterEvents[0].data.place.id).length === 0)
         marker_clickHandler(clusterEvents);
       else {
         let bounds = new mapboxgl.LngLatBounds();
@@ -157,14 +133,8 @@ const EventMap = ({ events = [], className }) => {
         key         = {coordinates.toString()}
         className   = "cluster"
         onClick     = {clickHandler}
-        style       = {{
-          width: r * 2,
-          height: r * 2,
-          top: r,
-          fontSize: 12 + pointCount
-        }}
       >
-        { pointCount }
+        { pointCount < 10 ? pointCount : '9+' }
       </Marker>
     );
   }
@@ -182,9 +152,6 @@ const EventMap = ({ events = [], className }) => {
       if(i === events.length) i = 0;
       marker_clickHandler([events[i]]);
       setLineCoordinates([]);
-
-      // if(i === 0)
-      //   setTimeout(_ => setSelectedEvents([events[1]]), 2000);
     }
 
     setPlaying(!isPlaying);
@@ -194,33 +161,13 @@ const EventMap = ({ events = [], className }) => {
   return (
     <div className={`EventMap ${className}`}>
 
-      <div className={`menu ${isPlaying ? 'open' : ''}`}>
-        <div className="tools">
-          <Button
-            variant   = "link"
-            className = {isPlaying ? 'enabled' : null}
-            onClick   = {playButton_clickHandler}
-          >
-            <FontAwesomeIcon title="Lecture" icon={faCirclePlay} />
-          </Button>
-        </div>
-        <div className="event-list">
-          {events.map(event =>
-            <div
-              className = {`item ${find(selectedEvents, event) ? 'selected' : ''}`}
-              key       = {event.slug}
-              onClick   = {_ => marker_clickHandler([event])}
-            >
-              <div className="icon">
-                <FontAwesomeIcon icon={icons[event.data.event_type]} title={l(`event.${event.data.event_type}`)} />
-              </div>
-              <span className="label">
-                {parseDate(event.data.date)} - {l(`event.${event.data.event_type}`)}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
+      <EventTimeline
+        events          = {events}
+        selectedEvents  = {selectedEvents}
+        isPlaying       = {isPlaying}
+        onEventClick    = {marker_clickHandler}
+        onPlayClick     = {playButton_clickHandler}
+      />
 
       <Map
         style                   = {`mapbox://styles/legionnaires/ckto0cfh40okl17pmek6tmiuz`}
@@ -230,20 +177,21 @@ const EventMap = ({ events = [], className }) => {
         fitBoundsOptions        = {FITBOUNDS_OPTIONS}
         renderChildrenInPortal  = {true}
         onClick                 = {() => setSelectedEvents(null)}
+        onZoomEnd               = {map => setZoom(map.transform._zoom)}
       >
         <ZoomControl position="topLeft" className="zoomControl"/>
         <Cluster
           ClusterMarkerFactory  = {clusterMarker}
           maxZoom               = {20}
         >
-          {events.map(event => (
+          {events.map((event, i) => (
             <Marker
               key         = {event.id}
               coordinates = {event.coordinates}
               className   = "marker"
               onClick     = {_ => marker_clickHandler([event])}
             >
-              <FontAwesomeIcon icon={icons[event.data.event_type]} />
+              <PinPoint label={String.fromCharCode(65 + i)} />
             </Marker>
           ))}
         </Cluster>
