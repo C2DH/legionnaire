@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useGetPerson, useGetEventsByPersonId } from '../hooks';
 import EventMap from '../components/EventMap';
 import EventCard from '../components/EventCard';
+import MedalCard from '../components/MedalCard';
 import { MediaRoute } from '../constants';
 import {
   TYPE_IMAGE,
@@ -16,7 +17,7 @@ import '../styles/pages/Person.scss';
 const Person = () => {
 
   const { slug } = useParams();
-  const [{ person, thumbnail }] = useGetPerson(slug);
+  const [{ person, thumbnail, medals }] = useGetPerson(slug);
   const [{ events, eventsByType }] = useGetEventsByPersonId(person?.id);
   const { birth, residence, enrollment, depot, death } = eventsByType[person?.id] || {};
 
@@ -35,7 +36,7 @@ const Person = () => {
       <Container className="mt-5">
         <Row>
           {thumbnail &&
-            <Col lg={2} md={3}>
+            <Col lg={3} md={3} className="pe-4">
               <div className="media thumbnail mb-5">
                 <Link to={`${MediaRoute.to}${thumbnail.slug}`}>
                   <img src={thumbnail.data.resolutions?.medium.url} alt={thumbnail.title} />
@@ -43,14 +44,30 @@ const Person = () => {
               </div>
             </Col>
           }
-          <Col lg={7} md={9}>
-            {birth && <EventCard type="birth" events={birth} />}
-            {residence && <EventCard type="residence" events={residence} />}
-            {enrollment && <EventCard type="enrollment" events={enrollment} />}
-            {depot && <EventCard type="depot" events={depot} />}
-            {death && <EventCard type="death" events={death} />}
-          </Col>
-          <Col lg>
+
+          <Col>
+            <Row>
+              <Col lg={8}>
+                {birth && <EventCard type="birth" events={birth} />}
+                {residence && <EventCard type="residence" events={residence} />}
+                {enrollment && <EventCard type="enrollment" events={enrollment} />}
+                {depot && <EventCard type="depot" events={depot} />}
+                {death && <EventCard type="death" events={death} />}
+              </Col>
+
+              <Col lg>
+                {medals?.length > 0 &&
+                  <React.Fragment>
+                    <h2>Parcours militaire</h2>
+                    <div className="medals mt-4">
+                      {medals?.map(medal =>
+                        <MedalCard key={medal.slug} medal={medal} />
+                      )}
+                    </div>
+                  </React.Fragment>
+                }
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

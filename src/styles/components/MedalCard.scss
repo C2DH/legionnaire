@@ -1,0 +1,29 @@
+.MedalCard {
+//  position: relative;
+  font-weight: bold;
+
+  .popup {
+    position: absolute;
+  //  display: none;
+    visibility: hidden;
+    box-shadow: 0px 0px 8px rgba(var(--bs-dark-rgb), 0.4);
+    padding: 10px;
+    background-color: var(--bs-light);
+    z-index: 1;
+    //top: 45px;
+    //left: 50%;
+    //left: 0;
+    width: max-content;
+    max-width: 350px;
+  //  transform: translateX(-50%);
+
+    .info {
+      text-transform: capitalize;
+    }
+  }
+
+  &:hover .popup {
+    //display: block;
+    visibility: visible;
+  }
+}
