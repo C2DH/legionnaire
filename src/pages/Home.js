@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import Particles from '../components/Particles';
 import '../styles/pages/Home.scss';
@@ -11,15 +11,23 @@ const imagesSrc = {
   original: "/media/image/84995bee11dbc90364c39285c9602d54.jpg"
 };
 
+const images = [
+  "/images/intro-01.jpg",
+  "/images/intro-02.jpg",
+  "/images/intro-03.jpg",
+  "/images/intro-04.jpg",
+  "/images/intro-05.jpg"
+];
+
 const Home = () => {
 
-  const [imgSrc, setImgSrc]   = useState(imagesSrc.medium);
+  const [imgSrc, setImgSrc]   = useState(images[0]);
   const [size, setSize]       = useState(1);
   const [space, setSpace]     = useState(0);
   const [scale, setScale]     = useState(1);
   const [radius, setRadius]   = useState(64);
   const [opacity, setOpacity] = useState(1);
-  const [shaker, setShaker]   = useState(false);
+  const [shaker, setShaker]   = useState(true);
   const [hold, setHold]       = useState(false);
 
   const particles_changeHandler = (type, value) => {
@@ -36,11 +44,21 @@ const Home = () => {
     }
   };
 
+  useEffect(_ => {
+    let i = 0;
+    const intervalId = setInterval(_ => {
+      setImgSrc(images[++i % images.length]);
+      console.log(i);
+    }, 6000);
+
+    return _ => clearInterval(intervalId);
+  }, []);
+
   return (
     <Container className="Home">
       <Row className="justify-content-center">
         <Particles
-          src       = {imgSrc}
+          src       = {images}
           size      = {size}
           space     = {space}
           scale     = {scale}

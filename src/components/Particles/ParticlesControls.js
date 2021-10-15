@@ -26,7 +26,8 @@ const ParticlesControls = ({
         <Form.Label column>Framerate</Form.Label>
         <Col>{frameRate} fps</Col>
       </Row>
-      <Row className="align-items-center">
+      { false &&
+        <Row className="align-items-center">
         <Form.Label column>Images</Form.Label>
         <Col>
           <Form.Control
@@ -40,6 +41,7 @@ const ParticlesControls = ({
           </Form.Control>
         </Col>
       </Row>
+    }
       <Row className="align-items-center">
         <Form.Label column>Size ({size}px)</Form.Label>
         <Col>

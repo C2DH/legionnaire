@@ -31,17 +31,19 @@ const CONFIG = {
 	src:			"",			//	Image file to split into particles
 
 	// The following parameters have an impact on the number of particules
-	size:			1,			// 	Size of a particule. An higher value decrease the image resolution. By example, with a size of 2, one particule represents 4 pixels of the image
+	size:			 1,			// 	Size of a particule. An higher value decrease the image resolution. By example, with a size of 2, one particule represents 4 pixels of the image
 	space:	  0,			// 	Space between particules. An higher value improve performance but decrease the image resolution.
 	scale:		1,			// 	Resize the image before splitting into particles
 
 	radius: 	64,			// 	Radius of the circle around the mouse from which particules are ejected
 	hold:	    false,	//	Define on true, the particules are disturbed even when the mouse stop moving. Maintain an empty cicle around the pointer.
-	margin:		100,		// 	Margin around the canvas. This area can contain disturbed particules
+	margin:		200,		// 	Margin around the canvas. This area can contain disturbed particules
 	opacity:	1,			//	Opacity of the particules
   shaker:   false,  //  Shake particules when first rendered
 	drag:			0.95,
+	drag2:		1.05,
 	ease:			0.25,
+  reverseEase: 0.10,
   onLoad:   null
 }
 
@@ -57,24 +59,104 @@ export default class Particles {
   canvas;
   rendering   = false;
   touching    = false;
+  reversing   = false;
 	thickness		= 0;
   alpha       = 256;
   frameCount  = 0;
+  imgIndex    = 0;
+  imageSrc;
   imageData;
   requestId;
+  reverseTimeout;
 
 	constructor(containerTarget, config = {}) {
 		this.config			= { ...CONFIG, ...config	}
+    this.config.shaker = true;
 		this.thickness 	= Math.pow(this.config.radius, 2);
     this.alpha      = this.config.opacity * 256;
+    this.config.src = this.config.src.constructor === Array ? this.config.src : [this.config.src];
 
 		//	Load image
-		const image 		= new Image();
-		image.src 			= this.config.src;
-		image.onload 		= () => this.init(containerTarget, image);
+    this.config.src.forEach((src, i) => {
+      const image 		= new Image();
+  		image.src 			= src;
+  		image.onload 		= () => {
+        this.particles[i] = this.createParticles(image);
+        if(i === 0)
+          this.init(containerTarget, image.width, image.height);
+      }
+    });
 	}
 
-	init(containerTarget, image) {
+  createParticles(image) {
+
+    const canvas 		= document.createElement('canvas');
+		const imgWidth	= image.width * this.config.scale;
+		const imgHeight	= image.height * this.config.scale;
+    const boxWidth  = imgWidth + this.config.margin * 2;
+    const boxHeight = imgHeight + this.config.margin * 2;
+    const particles = [];
+
+		canvas.width		= imgWidth;
+		canvas.height 	= imgHeight;
+
+		const ctx       = canvas.getContext('2d');
+		ctx.scale(this.config.scale, this.config.scale);
+		ctx.drawImage(image, 0, 0);
+
+		const data      = ctx.getImageData(0, 0, imgWidth, imgHeight).data;
+		ctx.clearRect(0, 0, imgWidth, imgHeight);
+
+
+		for (let y = 0; y < imgHeight; y += this.config.size + this.config.space) {
+				for (let x = 0; x < imgWidth; x += this.config.size + this.config.space) {
+
+						let i = x * PIXEL_SIZE + y * PIXEL_SIZE * imgWidth;
+
+								let color = data.slice(i, i + 3);
+		  					let p 		= Object.create(Particle);
+
+								p.x 		= p.ox = p.sx = this.config.margin + x;
+							  p.y 		= p.oy = p.sy = this.config.margin + y;
+
+                //  Shake particules
+                if(this.config.shaker){
+								  p.x = Math.random() * boxWidth;
+								  p.y = Math.random() * boxHeight;
+								  p.vx = p.x - p.ox;
+								  p.vy = p.y - p.oy;
+                }
+
+								p.xTouch = p.yTouch = true;
+								p.color = color;
+								particles.push(p);
+					//	}
+				}
+		}
+
+    return particles;
+  }
+
+  nextImage() {
+    this.imgIndex = (this.imgIndex + 1) % 5;
+
+    const particles = this.particles[this.imgIndex];
+    for (let i = 0, n = particles.length; i < n; i++) {
+
+      const p 	= particles[i];
+
+      p.ox = p.sx;
+      p.oy = p.sy;
+      p.vx = p.x - p.ox;
+      p.vy = p.y - p.oy;
+      p.xTouch = p.yTouch = true;
+    }
+
+    this.reversing = false;
+    this.render();
+  }
+
+	init(containerTarget, imageWidth, imageHeight) {
 
 		const container = document.getElementById(containerTarget || 'particles');
 		if(!container) {
@@ -83,50 +165,54 @@ export default class Particles {
     }
 
 		this.canvas 		= document.createElement('canvas');
-		const imgWidth	= image.width * this.config.scale;
-		const imgHeight	= image.height * this.config.scale;
+		// const imgWidth	= image.width * this.config.scale;
+		// const imgHeight	= image.height * this.config.scale;
+    //
+		// this.canvas.width		= this.width 	= imgWidth + this.config.margin * 2;
+		// this.canvas.height 	= this.height	= imgHeight + this.config.margin * 2;
+		this.canvas.width		= this.width 	= imageWidth * this.config.scale + this.config.margin * 2;
+		this.canvas.height 	= this.height	= imageHeight * this.config.scale + this.config.margin * 2;
 
-		this.canvas.width		= this.width 	= imgWidth + this.config.margin * 2;
-		this.canvas.height 	= this.height	= imgHeight + this.config.margin * 2;
+//    this.createParticles(image);
 
-		this.ctx = this.canvas.getContext('2d');
-		this.ctx.scale(this.config.scale, this.config.scale);
-		this.ctx.drawImage(image, 0, 0);
-
-		const data = this.ctx.getImageData(0, 0, imgWidth, imgHeight).data;
-		this.ctx.clearRect(0, 0, imgWidth, imgHeight);
-
-//		container.style.marginLeft = -this.config.margin + 'px';
-//		container.style.marginTop = -this.config.margin + 'px';
-
-		for (let y = 0; y < imgHeight; y += this.config.size + this.config.space) {
-				for (let x = 0; x < imgWidth; x += this.config.size + this.config.space) {
-
-						let i = x * PIXEL_SIZE + y * PIXEL_SIZE * imgWidth;
-
-						//	Don't render darkest pixels (only for optimization)
-						//if(data[i] > darkestLimit || data[i + 1] > darkestLimit || data[i + 2] > darkestLimit) {
-
-								let color = data.slice(i, i + 3);
-		  					let p 		= Object.create(Particle);
-
-								p.x 		= p.ox = this.config.margin + x;
-							  p.y 		= p.oy = this.config.margin + y;
-
-                //  Shake particules
-                if(this.config.shaker){
-								  p.x = Math.random() * this.width;
-								  p.y = Math.random() * this.height;
-								  p.vx = p.x - p.ox;
-								  p.vy = p.y - p.oy;
-                }
-
-								p.xTouch = p.yTouch = true;
-								p.color = color;
-								this.particles.push(p);
-					//	}
-				}
-		}
+ 		this.ctx = this.canvas.getContext('2d');
+// 		this.ctx.scale(this.config.scale, this.config.scale);
+// 		this.ctx.drawImage(image, 0, 0);
+//
+// 		const data = this.ctx.getImageData(0, 0, imgWidth, imgHeight).data;
+// 		this.ctx.clearRect(0, 0, imgWidth, imgHeight);
+//
+// //		container.style.marginLeft = -this.config.margin + 'px';
+// //		container.style.marginTop = -this.config.margin + 'px';
+//
+// 		for (let y = 0; y < imgHeight; y += this.config.size + this.config.space) {
+// 				for (let x = 0; x < imgWidth; x += this.config.size + this.config.space) {
+//
+// 						let i = x * PIXEL_SIZE + y * PIXEL_SIZE * imgWidth;
+//
+// 						//	Don't render darkest pixels (only for optimization)
+// 						//if(data[i] > darkestLimit || data[i + 1] > darkestLimit || data[i + 2] > darkestLimit) {
+//
+// 								let color = data.slice(i, i + 3);
+// 		  					let p 		= Object.create(Particle);
+//
+// 								p.x 		= p.ox = this.config.margin + x;
+// 							  p.y 		= p.oy = this.config.margin + y;
+//
+//                 //  Shake particules
+//                 if(this.config.shaker){
+// 								  p.x = Math.random() * this.width;
+// 								  p.y = Math.random() * this.height;
+// 								  p.vx = p.x - p.ox;
+// 								  p.vy = p.y - p.oy;
+//                 }
+//
+// 								p.xTouch = p.yTouch = true;
+// 								p.color = color;
+// 								this.particles.push(p);
+// 					//	}
+// 				}
+// 		}
 
 		this.canvas.onmousemove = this.container_mouseMoveHandler;
 		container.appendChild(this.canvas);
@@ -142,6 +228,7 @@ export default class Particles {
 
   destroy() {
     cancelAnimationFrame(this.requestId);
+    clearTimeout(this.reverseTimeout);
     this.particles  = null;
     this.imageData  = null;
     if(this.canvas) {
@@ -160,11 +247,14 @@ export default class Particles {
 
     let   moving      = false;
 		const data 				= this.imageData.data;
+    const ease        = this.reversing ? this.config.reverseEase : this.config.ease;
+    const drag        = this.reversing ? this.config.drag2 : this.config.drag;
+    const particles   = this.particles[this.imgIndex];
     data.fill(0);
 
-    for (let i = 0, n = this.particles.length; i < n; i++) {
+    for (let i = 0, n = particles.length; i < n; i++) {
 
-      const particle 	= this.particles[i];
+      const particle 	= particles[i];
 
 			if(this.touching) {
 
@@ -195,21 +285,27 @@ export default class Particles {
 
       //  Move particles
 			if(particle.xTouch){
-				particle.x += (( particle.vx *= this.config.drag ) + (particle.ox - particle.x) * this.config.ease);
+				particle.x += (( particle.vx *= drag ) + (particle.ox - particle.x) * ease);
 
 				if((particle.x + 0.5 | 0) === particle.ox){
 					particle.x = particle.ox;
 					particle.xTouch = false;
 				}
+
+        //if(!++particle.frameX)
+					//particle.xTouch = false;
 			}
 
 			if(particle.yTouch){
-				particle.y += (( particle.vy *= this.config.drag ) + (particle.oy - particle.y) * this.config.ease);
+				particle.y += (( particle.vy *= drag ) + (particle.oy - particle.y) * ease);
 
 				if((particle.y + 0.5 | 0) === particle.oy){
 					particle.y = particle.oy;
 					particle.yTouch = false;
 				}
+
+        //if(!++particle.frameY)
+				//	particle.yTouch = false;
 			}
 
       moving = moving || particle.xTouch || particle.yTouch;
@@ -245,7 +341,31 @@ export default class Particles {
     this.rendering = moving;
     if(moving)
 		  this.requestId = requestAnimationFrame(this.render);
+    else {
+      if(this.reversing)
+        this.nextImage();
+      else
+        this.reverseTimeout = setTimeout(this.reverse, 2000);
+    }
 	}
+
+  reverse = _ => {
+
+    const particles = this.particles[this.imgIndex];
+    for (let i = 0, n = particles.length; i < n; i++) {
+
+      const p 	= particles[i];
+
+      p.ox = Math.random() * this.width + 0.5 | 0;
+      p.oy = Math.random() * this.height + 0.5 | 0;
+      p.vx = 0;
+      p.vy = 0;
+      p.xTouch = p.yTouch = true;
+    }
+
+    this.reversing = true;
+		this.render();
+  }
 
 
 	container_mouseMoveHandler = e => {
@@ -255,7 +375,7 @@ export default class Particles {
 		this.mouse.x = e.clientX - bounds.left;
 		this.mouse.y = e.clientY - bounds.top;
 
-		this.touching = true;
+		this.touching = false;
 
     if(!this.rendering) this.render();
 	}
