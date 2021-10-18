@@ -31,15 +31,19 @@ const Particles = ({
       });
     }
 
-    if(particles.current) {
-      clearTimeout(particlesDelayId.current);
-      particlesDelayId.current = setTimeout(() => createAnimation(), 1000);
-    }
-    else createAnimation();
+     if(particles.current) {
+       clearTimeout(particlesDelayId.current);
+
+       particlesDelayId.current = setTimeout(() => createAnimation(), 1000);
+     }
+     else createAnimation();
 
     return () => particles.current?.destroy();
   }, [src, size, scale, space, radius, opacity, shaker, hold]);
 
+  // useEffect(() => {
+  //   particles.current?.loadImage(src);
+  // }, [src]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

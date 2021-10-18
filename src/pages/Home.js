@@ -22,8 +22,8 @@ const images = [
 const Home = () => {
 
   const [imgSrc, setImgSrc]   = useState(images[0]);
-  const [size, setSize]       = useState(1);
-  const [space, setSpace]     = useState(0);
+  const [size, setSize]       = useState(3);
+  const [space, setSpace]     = useState(1);
   const [scale, setScale]     = useState(1);
   const [radius, setRadius]   = useState(64);
   const [opacity, setOpacity] = useState(1);

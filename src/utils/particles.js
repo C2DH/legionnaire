@@ -37,13 +37,14 @@ const CONFIG = {
 
 	radius: 	64,			// 	Radius of the circle around the mouse from which particules are ejected
 	hold:	    false,	//	Define on true, the particules are disturbed even when the mouse stop moving. Maintain an empty cicle around the pointer.
-	margin:		200,		// 	Margin around the canvas. This area can contain disturbed particules
+	margin:		1000,		// 	Margin around the canvas. This area can contain disturbed particules
 	opacity:	1,			//	Opacity of the particules
   shaker:   false,  //  Shake particules when first rendered
+  touch:    false,
 	drag:			0.95,
 	drag2:		1.05,
-	ease:			0.25,
-  reverseEase: 0.10,
+	ease:			0.05,
+  reverseEase: 0.05,
   onLoad:   null
 }
 
@@ -123,8 +124,8 @@ export default class Particles {
                 if(this.config.shaker){
 								  p.x = Math.random() * boxWidth;
 								  p.y = Math.random() * boxHeight;
-								  p.vx = p.x - p.ox;
-								  p.vy = p.y - p.oy;
+								//  p.vx = p.x - p.ox;
+								//  p.vy = p.y - p.oy;
                 }
 
 								p.xTouch = p.yTouch = true;
@@ -147,8 +148,8 @@ export default class Particles {
 
       p.ox = p.sx;
       p.oy = p.sy;
-      p.vx = p.x - p.ox;
-      p.vy = p.y - p.oy;
+    //  p.vx = p.x - p.ox;
+    //  p.vy = p.y - p.oy;
       p.xTouch = p.yTouch = true;
     }
 
@@ -214,13 +215,14 @@ export default class Particles {
 // 				}
 // 		}
 
-		this.canvas.onmousemove = this.container_mouseMoveHandler;
+    if(this.config.touch)
+		  this.canvas.onmousemove = this.container_mouseMoveHandler;
 		container.appendChild(this.canvas);
 
     this.imageData 	= this.ctx.createImageData(this.width, this.height);
 
     if(this.config.onLoad)
-      this.config.onLoad(this.particles.length);
+      this.config.onLoad(this.particles[0].length);
 
 		this.render();
 	}
