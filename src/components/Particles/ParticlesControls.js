@@ -107,7 +107,7 @@ const ParticlesControls = ({
         </Col>
       </Row>
       <Row className="align-items-center">
-        <Form.Label column>Margin ({margin}px)</Form.Label>
+        <Form.Label column>Range ({margin}px)</Form.Label>
         <Col>
           <Form.Range
             value     = {margin}
