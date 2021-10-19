@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Particles from '../components/Particles';
 import '../styles/pages/Home.scss';
@@ -13,7 +13,6 @@ const images = [
 
 const Home = () => {
 
-  const [imgSrc, setImgSrc]           = useState(images[0]);
   const [size, setSize]               = useState(3);
   const [space, setSpace]             = useState(1);
   const [scale, setScale]             = useState(1);
@@ -29,7 +28,6 @@ const Home = () => {
 
   const particles_changeHandler = (type, value) => {
     switch(type) {
-    case 'src': setImgSrc(value); break;
     case 'size': setSize(value); break;
     case 'space': setSpace(value); break;
     case 'scale': setScale(value); break;
@@ -45,16 +43,6 @@ const Home = () => {
     default:
     }
   };
-
-  useEffect(_ => {
-    let i = 0;
-    const intervalId = setInterval(_ => {
-      setImgSrc(images[++i % images.length]);
-      console.log(i);
-    }, 6000);
-
-    return _ => clearInterval(intervalId);
-  }, []);
 
   return (
     <Container className="Home">

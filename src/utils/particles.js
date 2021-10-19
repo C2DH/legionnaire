@@ -28,7 +28,7 @@ const Particle = {
 
 const CONFIG = {
 
-	src:           "",			//	Image file to split into particles
+	src:         "",	  //	Url of the image to split or array of url
 
 	// The following parameters have an impact on the number of particules
 	size:        1,			// 	Size of a particule. An higher value decrease the image resolution. By example, with a size of 2, one particule represents 4 pixels of the image
@@ -71,14 +71,17 @@ export default class Particles {
   requestId;
   reverseTimeout;
 
+
 	constructor(containerTarget, config = {}) {
+
 		this.config			= { ...CONFIG, ...config	}
-    this.config.shaker = true;
 		this.thickness 	= Math.pow(this.config.radius, 2);
     this.alpha      = this.config.opacity * 256;
     this.config.src = this.config.src.constructor === Array ? this.config.src : [this.config.src];
+    if(!this.config.shaker)
+      this.config.looping = false;
 
-		//	Load image
+		//	Load images
     this.config.src.filter((_, i) => i === 0 || this.config.looping)
       .forEach((src, i) => {
         const image 		= new Image();
@@ -90,6 +93,7 @@ export default class Particles {
             }
       });
 	}
+
 
   createParticles(image) {
 
@@ -109,7 +113,6 @@ export default class Particles {
 
 		const data      = ctx.getImageData(0, 0, imgWidth, imgHeight).data;
 		ctx.clearRect(0, 0, imgWidth, imgHeight);
-
 
 		for (let y = 0; y < imgHeight; y += this.config.size + this.config.space) {
 				for (let x = 0; x < imgWidth; x += this.config.size + this.config.space) {
@@ -140,24 +143,6 @@ export default class Particles {
     return particles;
   }
 
-  nextImage() {
-    this.imgIndex = (this.imgIndex + 1) % this.particles.length;
-
-    const particles = this.particles[this.imgIndex];
-    for (let i = 0, n = particles.length; i < n; i++) {
-
-      const p 	= particles[i];
-
-      p.ox = p.sx;
-      p.oy = p.sy;
-    //  p.vx = p.x - p.ox;
-    //  p.vy = p.y - p.oy;
-      p.xTouch = p.yTouch = true;
-    }
-
-    this.reversing = false;
-    this.render();
-  }
 
 	init(containerTarget, imageWidth, imageHeight) {
 
@@ -168,54 +153,11 @@ export default class Particles {
     }
 
 		this.canvas 		= document.createElement('canvas');
-		// const imgWidth	= image.width * this.config.scale;
-		// const imgHeight	= image.height * this.config.scale;
     //
-		// this.canvas.width		= this.width 	= imgWidth + this.config.margin * 2;
-		// this.canvas.height 	= this.height	= imgHeight + this.config.margin * 2;
 		this.canvas.width		= this.width 	= imageWidth * this.config.scale + this.config.margin * 2;
 		this.canvas.height 	= this.height	= imageHeight * this.config.scale + this.config.margin * 2;
 
-//    this.createParticles(image);
-
  		this.ctx = this.canvas.getContext('2d');
-// 		this.ctx.scale(this.config.scale, this.config.scale);
-// 		this.ctx.drawImage(image, 0, 0);
-//
-// 		const data = this.ctx.getImageData(0, 0, imgWidth, imgHeight).data;
-// 		this.ctx.clearRect(0, 0, imgWidth, imgHeight);
-//
-// //		container.style.marginLeft = -this.config.margin + 'px';
-// //		container.style.marginTop = -this.config.margin + 'px';
-//
-// 		for (let y = 0; y < imgHeight; y += this.config.size + this.config.space) {
-// 				for (let x = 0; x < imgWidth; x += this.config.size + this.config.space) {
-//
-// 						let i = x * PIXEL_SIZE + y * PIXEL_SIZE * imgWidth;
-//
-// 						//	Don't render darkest pixels (only for optimization)
-// 						//if(data[i] > darkestLimit || data[i + 1] > darkestLimit || data[i + 2] > darkestLimit) {
-//
-// 								let color = data.slice(i, i + 3);
-// 		  					let p 		= Object.create(Particle);
-//
-// 								p.x 		= p.ox = this.config.margin + x;
-// 							  p.y 		= p.oy = this.config.margin + y;
-//
-//                 //  Shake particules
-//                 if(this.config.shaker){
-// 								  p.x = Math.random() * this.width;
-// 								  p.y = Math.random() * this.height;
-// 								  p.vx = p.x - p.ox;
-// 								  p.vy = p.y - p.oy;
-//                 }
-//
-// 								p.xTouch = p.yTouch = true;
-// 								p.color = color;
-// 								this.particles.push(p);
-// 					//	}
-// 				}
-// 		}
 
     if(this.config.touching)
 		  this.canvas.onmousemove = this.container_mouseMoveHandler;
@@ -296,9 +238,6 @@ export default class Particles {
 					particle.x = particle.ox;
 					particle.xTouch = false;
 				}
-
-        //if(!++particle.frameX)
-					//particle.xTouch = false;
 			}
 
 			if(particle.yTouch){
@@ -308,9 +247,6 @@ export default class Particles {
 					particle.y = particle.oy;
 					particle.yTouch = false;
 				}
-
-        //if(!++particle.frameY)
-				//	particle.yTouch = false;
 			}
 
       moving = moving || particle.xTouch || particle.yTouch;
@@ -348,6 +284,7 @@ export default class Particles {
     }
 	}
 
+
   reverse = _ => {
 
     const particles = this.particles[this.imgIndex];
@@ -364,6 +301,26 @@ export default class Particles {
 
     this.reversing = true;
 		this.render();
+  }
+
+
+  nextImage() {
+    this.imgIndex = (this.imgIndex + 1) % this.particles.length;
+
+    const particles = this.particles[this.imgIndex];
+    for (let i = 0, n = particles.length; i < n; i++) {
+
+      const p 	= particles[i];
+
+      p.ox = p.sx;
+      p.oy = p.sy;
+    //  p.vx = p.x - p.ox;
+    //  p.vy = p.y - p.oy;
+      p.xTouch = p.yTouch = true;
+    }
+
+    this.reversing = false;
+    this.render();
   }
 
 
