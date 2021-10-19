@@ -1,16 +1,17 @@
 .Home {
 
   margin-top: -3rem;
+  overflow: hidden;
 
   .animation {
-    position: relative;
-    overflow: hidden;
+  //  position: relative;
     display: flex;
     justify-content: center;
     height: 800px;
 
     .Particles {
-      margin-top: -500px;
+  //    margin-top: -1000px;
+  //  margin-left: -500px;
     }
   }
 

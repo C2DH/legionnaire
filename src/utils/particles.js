@@ -37,7 +37,11 @@ const CONFIG = {
 
 	radius:      64,		// 	Radius of the circle around the mouse from which particules are ejected
 	hold:        false,	//	Define on true, the particules are disturbed even when the mouse stop moving. Maintain an empty cicle around the pointer.
-	margin:      500,	// 	Margin around the canvas. This area can contain disturbed particules
+	margin:      null,	// 	Margin around the canvas. This area can contain disturbed particules
+	marginTop:   1000,	// 	Margin around the canvas. This area can contain disturbed particules
+  marginRight: 1000,
+  marginBottom:1000,
+  marginLeft:  1000,
 	opacity:     1,			//	Opacity of the particules
   shaker:      false, //  Shake particules when first rendered
   looping:     false, //  Explode particles after the shake animation. Loop between all pictures
@@ -80,6 +84,8 @@ export default class Particles {
     this.config.src = this.config.src.constructor === Array ? this.config.src : [this.config.src];
     if(!this.config.shaker)
       this.config.looping = false;
+    if(this.config.margin)
+      this.config.marginLeft = this.config.marginRight = this.config.marginTop = this.config.marginBottom = this.config.margin;
 
 		//	Load images
     this.config.src.filter((_, i) => i === 0 || this.config.looping)
@@ -100,8 +106,8 @@ export default class Particles {
     const canvas 		= document.createElement('canvas');
 		const imgWidth	= image.width * this.config.scale;
 		const imgHeight	= image.height * this.config.scale;
-    const boxWidth  = imgWidth + this.config.margin * 2;
-    const boxHeight = imgHeight + this.config.margin * 2;
+    const boxWidth  = imgWidth + this.config.marginLeft + this.config.marginRight;
+    const boxHeight = imgHeight + this.config.marginTop + this.config.marginBottom;
     const particles = [];
 
 		canvas.width		= imgWidth;
@@ -122,8 +128,8 @@ export default class Particles {
 								let color = data.slice(i, i + 3);
 		  					let p 		= Object.create(Particle);
 
-								p.x 		= p.ox = p.sx = this.config.margin + x;
-							  p.y 		= p.oy = p.sy = this.config.margin + y;
+								p.x 		= p.ox = p.sx = this.config.marginLeft + x;
+							  p.y 		= p.oy = p.sy = this.config.marginTop + y;
 
                 //  Shake particules
                 if(this.config.shaker){
@@ -154,8 +160,8 @@ export default class Particles {
 
 		this.canvas 		= document.createElement('canvas');
     //
-		this.canvas.width		= this.width 	= imageWidth * this.config.scale + this.config.margin * 2;
-		this.canvas.height 	= this.height	= imageHeight * this.config.scale + this.config.margin * 2;
+		this.canvas.width		= this.width 	= imageWidth * this.config.scale + this.config.marginLeft + this.config.marginRight;
+		this.canvas.height 	= this.height	= imageHeight * this.config.scale + this.config.marginTop + this.config.marginBottom;
 
  		this.ctx = this.canvas.getContext('2d');
 

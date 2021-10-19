@@ -18,6 +18,7 @@ const Home = () => {
   const [scale, setScale]             = useState(1);
   const [radius, setRadius]           = useState(64);
   const [opacity, setOpacity]         = useState(1);
+  const [margin, setMargin]           = useState(1000);
   const [pause, setPause]             = useState(1);
   const [shaker, setShaker]           = useState(true);
   const [ease, setEase]               = useState(5);
@@ -33,6 +34,7 @@ const Home = () => {
     case 'scale': setScale(value); break;
     case 'radius': setRadius(value); break;
     case 'opacity': setOpacity(value); break;
+    case 'margin': setMargin(value); break;
     case 'pause': setPause(value); break;
     case 'ease': setEase(value); break;
     case 'reverseEase': setReverseEase(value); break;
@@ -45,7 +47,8 @@ const Home = () => {
   };
 
   return (
-    <Container className="Home">
+    <div className="Home">
+    <Container>
       <Row className="justify-content-center">
         <Col md="6" className="intro pt-5">
           <h1>Légionnaires</h1>
@@ -66,6 +69,7 @@ const Home = () => {
             scale       = {scale}
             radius      = {radius}
             opacity     = {opacity}
+            margin      = {margin}
             pause       = {pause}
             ease        = {ease}
             reverseEase = {reverseEase}
@@ -79,6 +83,7 @@ const Home = () => {
         </Col>
       </Row>
     </Container>
+  </div>
   )
 }
 

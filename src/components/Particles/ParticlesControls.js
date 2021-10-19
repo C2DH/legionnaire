@@ -8,6 +8,7 @@ const ParticlesControls = ({
     scale       = 1,
     radius      = 64,
     opacity     = 1,
+    margin      = 1000,
     pause       = 1,
     ease        = 5,
     reverseEase = 5,
@@ -105,7 +106,18 @@ const ParticlesControls = ({
           />
         </Col>
       </Row>
-
+      <Row className="align-items-center">
+        <Form.Label column>Margin ({margin}px)</Form.Label>
+        <Col>
+          <Form.Range
+            value     = {margin}
+            min       = {0}
+            max       = {2000}
+            step      = {200}
+            onChange  = {e => onChange('margin', parseInt(e.target.value))}
+          />
+        </Col>
+      </Row>
       <Form.Check
         id        = "shaker"
         label     = "Shaker on start"

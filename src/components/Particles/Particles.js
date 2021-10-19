@@ -9,6 +9,7 @@ const Particles = ({
     scale         = 1,
     radius        = 64,
     opacity       = 1,
+    margin        = 1000,
     pause         = 1,
     ease          = 5,
     reverseEase   = 5,
@@ -18,7 +19,8 @@ const Particles = ({
     touching      = false,
     withControls  = false,
     onChange,
-    imagesSrc
+    imagesSrc,
+    style
   }) => {
 
 
@@ -31,7 +33,7 @@ const Particles = ({
   useEffect(() => {
     const createAnimation = () => {
       particles.current = new ParticlesJS('particles', {
-        src, size, scale, space, radius, opacity, pause, ease, reverseEase, shaker, looping, hold, touching,
+        src, size, scale, space, radius, opacity, margin, pause, ease, reverseEase, shaker, looping, hold, touching,
         onLoad: setCount
       });
     }
@@ -42,7 +44,7 @@ const Particles = ({
      } else createAnimation();
 
     return () => particles.current?.destroy();
-  }, [src, size, scale, space, radius, opacity, pause, ease, reverseEase, shaker, looping, hold, touching]);
+  }, [src, size, scale, space, radius, opacity, margin, pause, ease, reverseEase, shaker, looping, hold, touching]);
 
 
   useEffect(() => {
@@ -56,7 +58,11 @@ const Particles = ({
 
   return (
     <React.Fragment>
-      <div id="particles" className="Particles"></div>
+      <div
+        id        = "particles"
+        className = "Particles"
+        style     = {{ marginTop: `-${margin}px` }}
+      ></div>
       {withControls &&
         <ParticlesControls
           src         = {src}
@@ -65,6 +71,7 @@ const Particles = ({
           scale       = {scale}
           radius      = {radius}
           opacity     = {opacity}
+          margin      = {margin}
           pause       = {pause}
           ease        = {ease}
           reverseEase = {reverseEase}
