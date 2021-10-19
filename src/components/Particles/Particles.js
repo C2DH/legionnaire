@@ -9,8 +9,13 @@ const Particles = ({
     scale         = 1,
     radius        = 64,
     opacity       = 1,
+    pause         = 1,
+    ease          = 5,
+    reverseEase   = 5,
     shaker        = false,
+    looping       = false,
     hold          = false,
+    touching      = false,
     withControls  = false,
     onChange,
     imagesSrc
@@ -26,7 +31,7 @@ const Particles = ({
   useEffect(() => {
     const createAnimation = () => {
       particles.current = new ParticlesJS('particles', {
-        src, size, scale, space, radius, opacity, shaker, hold,
+        src, size, scale, space, radius, opacity, pause, ease, reverseEase, shaker, looping, hold, touching,
         onLoad: setCount
       });
     }
@@ -39,7 +44,7 @@ const Particles = ({
      else createAnimation();
 
     return () => particles.current?.destroy();
-  }, [src, size, scale, space, radius, opacity, shaker, hold]);
+  }, [src, size, scale, space, radius, opacity, pause, ease, reverseEase, shaker, looping, hold, touching]);
 
   // useEffect(() => {
   //   particles.current?.loadImage(src);
@@ -59,18 +64,23 @@ const Particles = ({
       <div id="particles" className="Particles"></div>
       {withControls &&
         <ParticlesControls
-          src       = {src}
-          size      = {size}
-          space     = {space}
-          scale     = {scale}
-          radius    = {radius}
-          opacity   = {opacity}
-          shaker    = {shaker}
-          hold      = {hold}
-          count     = {count}
-          imagesSrc = {imagesSrc}
-          onChange  = {onChange}
-          frameRate = {frameRate}
+          src         = {src}
+          size        = {size}
+          space       = {space}
+          scale       = {scale}
+          radius      = {radius}
+          opacity     = {opacity}
+          pause       = {pause}
+          ease        = {ease}
+          reverseEase = {reverseEase}
+          shaker      = {shaker}
+          looping     = {looping}
+          hold        = {hold}
+          touching    = {touching}
+          count       = {count}
+          imagesSrc   = {imagesSrc}
+          onChange    = {onChange}
+          frameRate   = {frameRate}
         />
       }
     </React.Fragment>

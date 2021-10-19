@@ -28,24 +28,25 @@ const Particle = {
 
 const CONFIG = {
 
-	src:			"",			//	Image file to split into particles
+	src:           "",			//	Image file to split into particles
 
 	// The following parameters have an impact on the number of particules
-	size:			 1,			// 	Size of a particule. An higher value decrease the image resolution. By example, with a size of 2, one particule represents 4 pixels of the image
-	space:	  0,			// 	Space between particules. An higher value improve performance but decrease the image resolution.
-	scale:		1,			// 	Resize the image before splitting into particles
+	size:        1,			// 	Size of a particule. An higher value decrease the image resolution. By example, with a size of 2, one particule represents 4 pixels of the image
+	space:       0,			// 	Space between particules. An higher value improve performance but decrease the image resolution.
+	scale:       1,			// 	Resize the image before splitting into particles
 
-	radius: 	64,			// 	Radius of the circle around the mouse from which particules are ejected
-	hold:	    false,	//	Define on true, the particules are disturbed even when the mouse stop moving. Maintain an empty cicle around the pointer.
-	margin:		1000,		// 	Margin around the canvas. This area can contain disturbed particules
-	opacity:	1,			//	Opacity of the particules
-  shaker:   false,  //  Shake particules when first rendered
-  touch:    false,
-	drag:			0.95,
-	drag2:		1.05,
-	ease:			0.05,
-  reverseEase: 0.05,
-  onLoad:   null
+	radius:      64,		// 	Radius of the circle around the mouse from which particules are ejected
+	hold:        false,	//	Define on true, the particules are disturbed even when the mouse stop moving. Maintain an empty cicle around the pointer.
+	margin:      500,	// 	Margin around the canvas. This area can contain disturbed particules
+	opacity:     1,			//	Opacity of the particules
+  shaker:      false, //  Shake particules when first rendered
+  looping:     false, //  Explode particles after the shake animation. Loop between all pictures
+  touching:    true,
+	drag:        0.95,
+  ease:        5,  //  Ease speed for the animation
+  reverseEase: 4,  //  Ease speed for the reverse animation
+  pause:       1,
+  onLoad:      null
 }
 
 export default class Particles {
@@ -78,15 +79,16 @@ export default class Particles {
     this.config.src = this.config.src.constructor === Array ? this.config.src : [this.config.src];
 
 		//	Load image
-    this.config.src.forEach((src, i) => {
-      const image 		= new Image();
-  		image.src 			= src;
-  		image.onload 		= () => {
-        this.particles[i] = this.createParticles(image);
-        if(i === 0)
-          this.init(containerTarget, image.width, image.height);
-      }
-    });
+    this.config.src.filter((_, i) => i === 0 || this.config.looping)
+      .forEach((src, i) => {
+        const image 		= new Image();
+  		    image.src 			= src;
+  		    image.onload 		= () => {
+            this.particles[i] = this.createParticles(image);
+            if(i === 0)
+              this.init(containerTarget, image.width, image.height);
+            }
+      });
 	}
 
   createParticles(image) {
@@ -139,7 +141,7 @@ export default class Particles {
   }
 
   nextImage() {
-    this.imgIndex = (this.imgIndex + 1) % 5;
+    this.imgIndex = (this.imgIndex + 1) % this.particles.length;
 
     const particles = this.particles[this.imgIndex];
     for (let i = 0, n = particles.length; i < n; i++) {
@@ -215,8 +217,9 @@ export default class Particles {
 // 				}
 // 		}
 
-    if(this.config.touch)
+    if(this.config.touching)
 		  this.canvas.onmousemove = this.container_mouseMoveHandler;
+
 		container.appendChild(this.canvas);
 
     this.imageData 	= this.ctx.createImageData(this.width, this.height);
@@ -249,8 +252,8 @@ export default class Particles {
 
     let   moving      = false;
 		const data 				= this.imageData.data;
-    const ease        = this.reversing ? this.config.reverseEase : this.config.ease;
-    const drag        = this.reversing ? this.config.drag2 : this.config.drag;
+    const ease        = this.reversing ? this.config.reverseEase / 100 : this.config.ease / 100;
+    const drag        = this.config.drag;
     const particles   = this.particles[this.imgIndex];
     data.fill(0);
 
@@ -333,21 +336,15 @@ export default class Particles {
 		this.ctx.putImageData(this.imageData, 0, 0);
 
     this.frameCount++;
-    			// msCount = Date.now() - ms;
-    			// if(msCount > 10000) {
-    			// 	console.log(frame / 10);
-    			// 	frame = 0;
-    			// 	ms = Date.now();
-    			// }
 
     this.rendering = moving;
     if(moving)
 		  this.requestId = requestAnimationFrame(this.render);
     else {
-      if(this.reversing)
-        this.nextImage();
-      else
-        this.reverseTimeout = setTimeout(this.reverse, 2000);
+      if(this.config.looping) {
+        if(this.reversing) this.nextImage();
+        else this.reverseTimeout = setTimeout(this.reverse, this.config.pause * 1000);
+      }
     }
 	}
 
@@ -377,8 +374,9 @@ export default class Particles {
 		this.mouse.x = e.clientX - bounds.left;
 		this.mouse.y = e.clientY - bounds.top;
 
-		this.touching = false;
+		this.touching = true;
 
+    clearTimeout(this.reverseTimeout);
     if(!this.rendering) this.render();
 	}
 

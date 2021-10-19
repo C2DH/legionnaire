@@ -1,16 +1,17 @@
 .Home {
 
-  min-height: 600px;
+  margin-top: -3rem;
 
-  .Particles {
+  .animation {
+    position: relative;
+    overflow: hidden;
     display: flex;
-    position: fixed;
     justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    z-index: -1;
+    height: 800px;
+
+    .Particles {
+      margin-top: -500px;
+    }
   }
 
 }

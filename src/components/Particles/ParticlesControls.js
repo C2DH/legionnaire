@@ -3,16 +3,21 @@ import { Row, Col, Form } from 'react-bootstrap';
 
 const ParticlesControls = ({
     src,
-    size      = 1,
-    space     = 0,
-    scale     = 1,
-    radius    = 64,
-    opacity   = 1,
-    shaker    = false,
-    hold      = false,
-    count     = 0,
-    frameRate = 0,
-    imagesSrc = [],
+    size        = 1,
+    space       = 0,
+    scale       = 1,
+    radius      = 64,
+    opacity     = 1,
+    pause       = 1,
+    ease        = 5,
+    reverseEase = 5,
+    shaker      = false,
+    looping     = false,
+    hold        = false,
+    touching    = false,
+    count       = 0,
+    frameRate   = 0,
+    imagesSrc   = [],
     onChange
   }) => {
 
@@ -26,22 +31,22 @@ const ParticlesControls = ({
         <Form.Label column>Framerate</Form.Label>
         <Col>{frameRate} fps</Col>
       </Row>
-      { false &&
+      {imagesSrc.length > 0 &&
         <Row className="align-items-center">
-        <Form.Label column>Images</Form.Label>
-        <Col>
-          <Form.Control
-            as        = "select"
-            value     = {src}
-            onChange  = {e => onChange('src', e.target.value)}
-          >
-            {Object.entries(imagesSrc).map(([type, src]) =>
-              <option key={type} value={src}>{type}</option>
-            )}
-          </Form.Control>
-        </Col>
-      </Row>
-    }
+          <Form.Label column>Images</Form.Label>
+          <Col>
+            <Form.Control
+              as        = "select"
+              value     = {src}
+              onChange  = {e => onChange('src', e.target.value)}
+            >
+              {Object.entries(imagesSrc).map(([type, src]) =>
+                <option key={type} value={src}>{type}</option>
+              )}
+            </Form.Control>
+          </Col>
+        </Row>
+      }
       <Row className="align-items-center">
         <Form.Label column>Size ({size}px)</Form.Label>
         <Col>
@@ -100,18 +105,77 @@ const ParticlesControls = ({
           />
         </Col>
       </Row>
-        <Form.Check
-          id        = "shaker"
-          label     = "Shaker on start"
-          checked   = {shaker}
-          onChange  = {e => onChange('shaker', e.target.checked)}
-        />
+
+      <Form.Check
+        id        = "shaker"
+        label     = "Shaker on start"
+        checked   = {shaker}
+        onChange  = {e => onChange('shaker', e.target.checked)}
+      />
+      {shaker &&
+        <React.Fragment>
+          <Row className="align-items-center">
+            <Form.Label column>Ease speed ({ease})</Form.Label>
+            <Col>
+              <Form.Range
+                value     = {ease}
+                min       = {1}
+                max       = {10}
+                step      = {1}
+                onChange  = {e => onChange('ease', parseInt(e.target.value))}
+              />
+            </Col>
+          </Row>
+          <Form.Check
+            id        = "looping"
+            label     = "Reverse / loop"
+            checked   = {looping}
+            onChange  = {e => onChange('looping', e.target.checked)}
+          />
+          {looping &&
+            <React.Fragment>
+              <Row className="align-items-center">
+                <Form.Label column>Rev. speed ({reverseEase})</Form.Label>
+                <Col>
+                  <Form.Range
+                    value     = {reverseEase}
+                    min       = {1}
+                    max       = {10}
+                    step      = {1}
+                    onChange  = {e => onChange('reverseEase', parseInt(e.target.value))}
+                  />
+                </Col>
+              </Row>
+              <Row className="align-items-center">
+                <Form.Label column>Pause ({pause}s.)</Form.Label>
+                <Col>
+                  <Form.Range
+                    value     = {pause}
+                    min       = {1}
+                    max       = {5}
+                    step      = {1}
+                    onChange  = {e => onChange('pause', parseInt(e.target.value))}
+                  />
+                </Col>
+              </Row>
+            </React.Fragment>
+          }
+        </React.Fragment>
+      }
+      <Form.Check
+        id        = "touching"
+        label     = "Touching"
+        checked   = {touching}
+        onChange  = {e => onChange('touching', e.target.checked)}
+      />
+      {touching &&
         <Form.Check
           id        = "hold"
           label     = "Hold touching"
           checked   = {hold}
           onChange  = {e => onChange('hold', e.target.checked)}
         />
+      }
     </Form>
   );
 };
