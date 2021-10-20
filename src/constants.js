@@ -27,6 +27,9 @@ export const TYPE_MEDAL = "medal";
 
 export const MEDIA_VIGNETTE = "vignette";
 
+export const EVENT_BIRTH = "birth";
+export const EVENT_DEATH = "death";
+
 export const MEDAL_ICONS = {
   "Citation": CitationIcon,
   "Croix": CroixIcon,

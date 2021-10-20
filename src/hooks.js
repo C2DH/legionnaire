@@ -9,10 +9,8 @@ import {
   eventsState,
   mediasState
 } from './state';
-import { MEDIA_VIGNETTE } from './constants';
 
 const ALL_RECORDS = 10000;
-const EVENT_BIRTH = "birth";
 
 /**
  * Hook to get a person identified by its id from the backend
@@ -27,45 +25,28 @@ export function useGetPerson(id) {
 }
 
 /**
- * Hook to get a person identified by its id from the backend
+ * Hook to get the list of legionnaires from the backend
  * @param   offset  offset of the current page to load
+ * @param   starts  Optional. First letter of the name to filter the list
  */
-export function useGetPeople(offset = 0) {
+export function useGetPeople(offset = 0, starts) {
 
   //  Memorize params to avoid infinite loop
   const params = useMemo(() => ({
     filters: {
-      data__type: 'person'
+      data__type: 'person',
+      title__istartswith: starts
     },
     limit: 100,
     detailed: true,
     offset: offset,
     orderby: 'title'
-  }), [offset]);
+  }), [offset, starts]);
 
   return useRunRj(
     peopleState,
     [ deps.withMeta(params, {append: offset !== 0}) ],
-    false,
-    (state, { getList, getCount, hasNext, getNext }) => ({
-      people: (getList(state) || []).map(person => {
-        for(const related of person.documents) {
-
-          //  Get the vignette or firts photo from related documents and put it in the illustration property
-          if(related.data.type === MEDIA_VIGNETTE /*|| (!person.illustration && related.data.type === MEDIA_PHOTO)*/)
-            person.illustration = related;
-
-          // Get the birth date from related documents and put the year in the data.birth_year property
-          if(related.data.event_type === EVENT_BIRTH)
-            person.data.birth_year = related.data.date?.substring(0, 4);
-
-        }
-        return person;
-      }),
-      count: getCount(state),
-      canLoadMore: hasNext(state),
-      nextOffset: getNext(state)?.offset
-    })
+    false
   );
 }
 
@@ -129,6 +110,7 @@ export function useGetMedia(id) {
 /**
  * Hook to get paginated list of medias
  * @param   offset  offset of the current page to load
+ * @param   type    type of the media to get
  */
 export function useGetMedias(offset = 0, type) {
 

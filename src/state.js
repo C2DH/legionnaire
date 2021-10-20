@@ -1,9 +1,15 @@
 import { rj } from 'react-rocketjump';
 import rjCache from 'react-rocketjump/plugins/cache';
 import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
+import { find } from 'lodash';
 
 import { getDocument, getDocuments } from './api';
-import { MEDIA_VIGNETTE, TYPE_MEDAL } from './constants';
+import {
+  MEDIA_VIGNETTE,
+  TYPE_MEDAL,
+  EVENT_BIRTH,
+  EVENT_DEATH
+} from './constants';
 
 
 export const docState = rj(
@@ -50,7 +56,27 @@ export const peopleState = rj(
     pageSize: 100,
     pagination: limitOffsetPaginationAdapter,
   }), {
-    effect: getDocuments
+    effect: getDocuments,
+
+    //  Selector to get events in an object with the event type as key
+    selectors: ({ getList, getCount, hasNext, getNext }) => ({
+      getPeople: state => getList(state)?.map(person => ({
+        ...person,
+        illustration: person.documents.filter(doc => doc.data.type === MEDIA_VIGNETTE)[0],
+        data: {
+          ...person.data,
+          birth_year: find(person.documents, ['data.event_type', EVENT_BIRTH])?.data.date?.substring(0, 4),
+          death_year: find(person.documents, ['data.event_type', EVENT_DEATH])?.data.date?.substring(0, 4)
+        }
+      })),
+      getNextOffset: state => getNext(state)?.offset
+    }),
+    computed: {
+      people: 'getPeople',
+      count: 'getCount',
+      canLoadMore: 'hasNext',
+      nextOffset: 'getNextOffset'
+    }
   }
 );
 

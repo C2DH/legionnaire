@@ -1,0 +1,30 @@
+.Browse {
+
+  .position-sticky {
+    z-index: 1;
+    top: 65px;
+    position: sticky;
+    background-color: var(--bs-light);
+    margin-left: 0;
+    padding: 1rem 0;
+    margin: -1rem 0 0 0;
+  }
+
+  .start-facet {
+    justify-content: center;
+
+    .nav-link {
+      color: var(--bs-dark);
+      padding: 0;
+      margin: 0 1rem;
+      transition-property: border;
+      text-transform: capitalize;
+      box-sizing: border-box;
+      height: 2rem;
+
+      &.active, &:hover {
+        border-bottom: 4px solid var(--bs-primary);
+      }
+    }
+  }
+}

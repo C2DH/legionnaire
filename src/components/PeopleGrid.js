@@ -42,14 +42,17 @@ const PeopleGrid = ({ items, canLoadMore=false, loadMore }) => {
   }));
   const masonry                 = useRef(null);
 
-  useEffect(() => {
+
+  useEffect(_ => {
+    cache.clearAll();
     cellPositioner.reset({
       ...cellPositionerConfig,
       cellMeasurerCache:  cache,
       columnCount:        colCount
     });
-    masonry.current.recomputeCellPositions();
-  }, [colCount, cache, cellPositioner]);
+     masonry.current.clearCellPositions();
+  }, [items, colCount, cache, cellPositioner]);
+
 
   function cellRenderer({ index, key, parent, style }) {
 
@@ -78,14 +81,17 @@ const PeopleGrid = ({ items, canLoadMore=false, loadMore }) => {
     )
   }
 
+
   function onResize({ width }) {
     setColCount(Math.floor((width + SPACER) / (COLUMN_WIDTH + SPACER)));
   }
+
 
   function onCellsRendered({ stopIndex }) {
     if (canLoadMore && stopIndex >= items.length - 10)
       loadMore()
   }
+
 
   return (
     <WindowScroller>

@@ -29,8 +29,12 @@ const PersonCard = ({ person, imageHeight }) => {
         }
         <div>
           { person.title }
-          {person.data.birth_year &&
-            <span> ({person.data.birth_year})</span>
+          {(person.data.birth_year || person.data.death_year) &&
+            <span> ({person.data.birth_year}
+              {person.data.death_year &&
+                <span>&nbsp;-&nbsp;{person.data.death_year}</span>
+              })
+            </span>
           }
         </div>
       </Link>
