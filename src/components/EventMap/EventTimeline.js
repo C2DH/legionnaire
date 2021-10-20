@@ -4,8 +4,8 @@ import { find } from 'lodash';
 import { getLabel as l, parseDate } from '../../utils';
 
 import PinPoint from './icons/PinPoint';
-import { ReactComponent as PlayIcon } from './icons/play.svg';
-import { ReactComponent as PauseIcon } from './icons/pause.svg';
+import playIcon from './icons/play.png';
+import pauseIcon from './icons/pause.png';
 import '../../styles/components/EventMap/EventTimeline.scss';
 
 
@@ -26,7 +26,7 @@ const EventTimeline = ({
             className = {isPlaying ? 'enabled' : null}
             onClick   = {onPlayClick}
           >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            <img src={isPlaying ? pauseIcon : playIcon} />
           </Button>
         </div>
       }

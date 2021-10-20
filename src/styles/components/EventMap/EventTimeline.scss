@@ -17,6 +17,11 @@
       line-height: 1;
       box-shadow: unset;
 
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
       &:hover {
         opacity: 0.6;
       }
