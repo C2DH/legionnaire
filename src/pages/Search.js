@@ -8,9 +8,13 @@ import {
 } from 'use-query-params'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch  } from '@fortawesome/free-solid-svg-icons';
-import { useSearch, useGetEventsByPersonId } from '../hooks';
+import {
+  useSearchPeople,
+  useSearchPlaces,
+  useGetEventsByPersonId
+} from '../hooks';
 import { parseYear } from '../utils';
-import { PersonRoute } from '../constants.js';
+import { PersonRoute, PlaceRoute } from '../constants.js';
 
 import '../styles/pages/Search.scss';
 
@@ -42,8 +46,10 @@ const Search = () => {
   const [query, setQuery]       = useQueryParams({
     q: withDefault(StringParam, '')
   });
-  const [{ people, peopleIds }] = useSearch(query.q);
+  const [{ people, peopleIds }] = useSearchPeople(query.q);
+  const [{ places }]            = useSearchPlaces(query.q);
   const [{ eventsByType }]      = useGetEventsByPersonId(peopleIds, EVENT_TYPE_FILTER);
+
 
   const searchForm_submitHandler = e => {
     const q = queryField.current.value;
@@ -51,36 +57,59 @@ const Search = () => {
     e.preventDefault();
   }
 
+
   return (
     <Container className="Search">
       <Row>
         <Col md={9}>
           <Form className="search-form my-4" onSubmit={searchForm_submitHandler}>
-            <Form.Control className="search-input" name="q" ref={queryField} />
+            <Form.Control className="search-input" name="q" ref={queryField} defaultValue={query.q} />
             <FontAwesomeIcon icon={faSearch} />
           </Form>
         </Col>
       </Row>
 
-      <Row className="my-5">
-        <Col md={9}>
-          {query && people &&
-            <React.Fragment>
-              <h2>Légionnaires</h2>
-              {people.map(person =>
-                <PersonRecord
-                  slug      = {person.slug}
-                  key       = {person.slug}
-                  name      = {person.title}
-                  place     = {eventsByType[person.id]?.birth?.[0].data.place.title}
-                  birthYear = {parseYear(eventsByType[person.id]?.birth?.[0].data.date)}
-                  deathYear = {parseYear(eventsByType[person.id]?.death?.[0].data.date)}
-                />
-              )}
-            </React.Fragment>
-          }
-        </Col>
-      </Row>
+      {query.q && people.length === 0 && places.length === 0 &&
+        <Row className="my-5">
+          <Col>Aucun résultats trouvé</Col>
+        </Row>
+      }
+
+      {query.q && people.length > 0 &&
+        <Row className="my-5">
+          <Col md={9}>
+            <h2>Légionnaires</h2>
+            {people.map(person =>
+              <PersonRecord
+                slug      = {person.slug}
+                key       = {person.slug}
+                name      = {person.title}
+                place     = {eventsByType?.birth?.[person.id]?.[0].place.title}
+                birthYear = {parseYear(eventsByType?.birth?.[person.id]?.[0].data.date)}
+                deathYear = {parseYear(eventsByType?.death?.[person.id]?.[0].data.date)}
+              />
+            )}
+          </Col>
+        </Row>
+      }
+
+      {query.q && places.length > 0 &&
+        <Row className="my-5">
+          <Col md={9}>
+            <h2>Places</h2>
+            {places.map(place =>
+              <Row key={place.slug} className="my-2">
+                <Col>
+                  <Link to={`${PlaceRoute.to}${place.slug}`}>
+                    {place.title}
+                  </Link>
+                </Col>
+              </Row>
+            )}
+          </Col>
+        </Row>
+      }
+
     </Container>
   )
 }

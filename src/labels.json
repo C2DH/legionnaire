@@ -24,5 +24,6 @@
   "event.wounded": "Blessure",
   "event.hospital": "Hôpital",
   "event.wedding": "Mariage",
-  "event.child": "Enfant"
+  "event.child": "Enfant",
+  "event.reform": "Réforme"
 }

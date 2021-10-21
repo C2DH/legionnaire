@@ -10,6 +10,7 @@ import OrdreIcon from './images/medals/ordre.svg';
 export const AboutRoute = { to: '/about', label: 'À propos' }
 export const BrowseRoute = { to:'/browse', label: 'Parcourir'}
 export const PersonRoute = { to:'/browse/person/', label: 'Person'}
+export const PlaceRoute = { to:'/browse/place/', label: 'Place'}
 export const SearchRoute = { to: '/search', label: 'Recherche' }
 export const CollectionRoute = { to: '/collection', label: 'Collection' }
 export const MediaRoute = { to: '/collection/', label: 'Media' }

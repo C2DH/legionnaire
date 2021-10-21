@@ -80,21 +80,50 @@ export const peopleState = rj(
   }
 );
 
+export const placeState = rj(
+  rjCache({
+    ns: 'place',
+    size: 50
+  }), {
+    effect: getDocument,
+    computed: {
+      place: 'getData'
+    }
+  }
+);
+
 export const searchPeopleState = rj(
   rjCache({
-    ns: 'persons',
+    ns: 'searchPeople',
     size: 50
   }), {
     effect: getDocuments,
 
     //  Selector to get events in an object with the event type as key
     selectors: ({ getData }) => ({
-      getPeople: state => getData(state)?.results,
+      getPeople: state => getData(state)?.results || [],
       getPeopleIds: state => getData(state)?.results.map(person => person.id)
     }),
     computed: {
       people: 'getPeople',
       peopleIds: 'getPeopleIds'
+    }
+  }
+);
+
+export const searchPlacesState = rj(
+  rjCache({
+    ns: 'searchPlaces',
+    size: 50
+  }), {
+    effect: getDocuments,
+
+    //  Selector to get events in an object with the event type as key
+    selectors: ({ getData }) => ({
+      getPlaces: state => getData(state)?.results || []
+    }),
+    computed: {
+      places: 'getPlaces'
     }
   }
 );
@@ -111,7 +140,7 @@ export const eventsState = rj(
       getEvents: state => getData(state)?.results.map(
         event => ({
           ...event,
-          coordinates: [...event.data.place.data.coordinates.geometry.coordinates].reverse()
+          coordinates: [...event.place.data.coordinates.geometry.coordinates].reverse()
         })
       ),
       getEventsByType: state => {
@@ -120,11 +149,11 @@ export const eventsState = rj(
         const events = getData(state)?.results;
 
         for(const event of events || []) {
-          const personId  = event.data.person.id;
+          const personId  = event.person.id;
           const type      = event.data.event_type;
-          eventByTypes[personId]= eventByTypes[personId] || {};
-          eventByTypes[personId][type] = eventByTypes[personId][type] || [];
-          eventByTypes[personId][type].push(event);
+          eventByTypes[type] = eventByTypes[type] || {};
+          eventByTypes[type][personId] = eventByTypes[type][personId] || [];
+          eventByTypes[type][personId].push(event);
         }
 
         return eventByTypes;
@@ -149,7 +178,7 @@ export const eventsState = rj(
             results: action.payload.data.results.map(event => {
 
               for(const related of event.documents) {
-                event.data[related.data.type] = related;
+                event[related.data.type] = related;
               }
 
               return event;

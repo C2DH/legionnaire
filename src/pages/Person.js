@@ -19,7 +19,7 @@ const Person = () => {
   const { slug } = useParams();
   const [{ person, thumbnail, medals }] = useGetPerson(slug);
   const [{ events, eventsByType }] = useGetEventsByPersonId(person?.id);
-  const { birth, residence, enrollment, depot, death } = eventsByType[person?.id] || {};
+  const { birth, residence, enrollment, depot, death } = eventsByType || {};
 
   return (
     <div className="Person">
@@ -48,11 +48,11 @@ const Person = () => {
           <Col>
             <Row>
               <Col lg={8}>
-                {birth && <EventCard type="birth" events={birth} />}
-                {residence && <EventCard type="residence" events={residence} />}
-                {enrollment && <EventCard type="enrollment" events={enrollment} />}
-                {depot && <EventCard type="depot" events={depot} />}
-                {death && <EventCard type="death" events={death} />}
+                {birth && <EventCard type="birth" events={birth[person.id]} />}
+                {residence && <EventCard type="residence" events={residence[person.id]} />}
+                {enrollment && <EventCard type="enrollment" events={enrollment[person.id]} />}
+                {depot && <EventCard type="depot" events={depot[person.id]} />}
+                {death && <EventCard type="death" events={death[person.id]} />}
               </Col>
 
               <Col lg>
@@ -72,7 +72,12 @@ const Person = () => {
         </Row>
       </Container>
 
-      <EventMap events={events} className="my-5" />
+      <EventMap
+        events          = {events}
+        className       = "my-5"
+        showLines       = {true}
+        fitBoundsOnLoad = {true}
+      />
 
       <Container>
         <Row>

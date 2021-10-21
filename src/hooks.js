@@ -5,7 +5,9 @@ import {
   docsState,
   personState,
   peopleState,
+  placeState,
   searchPeopleState,
+  searchPlacesState,
   eventsState,
   mediasState
 } from './state';
@@ -47,6 +49,18 @@ export function useGetPeople(offset = 0, starts) {
     peopleState,
     [ deps.withMeta(params, {append: offset !== 0}) ],
     false
+  );
+}
+
+/**
+ * Hook to get a place identified by its id from the backend
+ * @param   id  id or slug of the place to get
+ */
+export function useGetPlace(id) {
+  return useRunRj(
+    placeState,
+    [ id ],
+    true
   );
 }
 
@@ -163,10 +177,10 @@ export function useGetMediaFacets() {
 }
 
 /**
- * Hook to do a search from the backend
+ * Hook to do a search on people from the backend
  * @param   q       query to search
  */
-export function useSearch(query='') {
+export function useSearchPeople(query='') {
 
   //  Memorize params to avoid infinite loop
   const params = useMemo(() => (
@@ -182,6 +196,31 @@ export function useSearch(query='') {
 
   return useRunRj(
     searchPeopleState,
+    [ deps.maybeNull(params) ],
+    true
+  );
+}
+
+/**
+ * Hook to do a search on places from the backend
+ * @param   q       query to search
+ */
+export function useSearchPlaces(query='') {
+
+  //  Memorize params to avoid infinite loop
+  const params = useMemo(() => (
+    query ?
+      {
+        filters: {
+          data__type: 'place'
+        },
+        q: `${query}*`,
+        limit: ALL_RECORDS
+      }: null
+  ), [query]);
+
+  return useRunRj(
+    searchPlacesState,
     [ deps.maybeNull(params) ],
     true
   );

@@ -9,6 +9,7 @@ const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Person = lazy(() => import('./pages/Person'));
+const Place = lazy(() => import('./pages/Place'));
 const Search = lazy(() => import('./pages/Search'));
 const Collection = lazy(() => import('./pages/Collection'));
 const Media = lazy(() => import('./pages/Media'));
@@ -51,6 +52,9 @@ const AppRoutes = ({enableGA=false}) => {
           </Route>
           <Route exact path="/browse/person/:slug">
             <Person />
+          </Route>
+          <Route exact path="/browse/place/:slug">
+            <Place />
           </Route>
           <Route exact path="/search">
             <Search />

@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { getLabel as l, parseDate } from '../utils';
+import { PlaceRoute } from '../constants.js';
 
 import '../styles/components/EventCard.scss';
 
@@ -17,7 +19,9 @@ const Event = ({ type, events }) => (
       <h2>{l(`event.${type}.place`)}</h2>
       {events.map(event =>
         <div key={event.slug}>
-          {event.data.place.data.city} ({event.data.place.data.country})
+          <Link to={`${PlaceRoute.to}${event.place.slug}`}>
+            {event.place.data.city} ({event.place.data.country})
+          </Link>
         </div>
       )}
     </Col>

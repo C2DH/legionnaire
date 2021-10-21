@@ -9,7 +9,7 @@ import ReactMapboxGl, {
 import mapboxgl from 'mapbox-gl';
 //import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; // eslint-disable-line import/no-webpack-loader-syntax
-import { find, findIndex, last } from 'lodash';
+import { find, findIndex, last, sortBy } from 'lodash';
 import { parseDate } from '../../utils';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -34,9 +34,10 @@ const FITBOUNDS_OPTIONS = {
   }
 };
 
-const EventMap = ({ events = [], className }) => {
 
-  const [zoom, setZoom]                       = useState(0);
+const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad = false }) => {
+
+  const [zoom, setZoom]                       = useState(7);
   const [center, setCenter]                   = useState([2.1008033, 47.6148384]);
   const [fitBounds, setFitBounds]             = useState(null);
   const [selectedEvents, setSelectedEvents]   = useState(null);
@@ -47,21 +48,26 @@ const EventMap = ({ events = [], className }) => {
   useEffect(_ => {
     if(events.length === 0) return;
 
-    let bounds = new mapboxgl.LngLatBounds();
-    events.forEach(event => bounds.extend(event.coordinates));
-    setFitBounds(bounds.toArray());
+    if(fitBoundsOnLoad) {
+      let bounds = new mapboxgl.LngLatBounds();
+      events.forEach(event => bounds.extend(event.coordinates));
+      setFitBounds(bounds.toArray());
+    } else
+      setCenter(events[0].coordinates);
 
-    const coordinates = events.slice(0, -1).map((event, i) => [
-        event.id,
-        parseFloat(event.coordinates[0]),
-        parseFloat(event.coordinates[1]),
-        parseFloat(events[i+1].coordinates[0]),
-        parseFloat(events[i+1].coordinates[1]),
-        50
-    ]);
+    if(showLines) {
+      const coordinates = events.slice(0, -1).map((event, i) => [
+          event.id,
+          parseFloat(event.coordinates[0]),
+          parseFloat(event.coordinates[1]),
+          parseFloat(events[i+1].coordinates[0]),
+          parseFloat(events[i+1].coordinates[1]),
+          50
+      ]);
 
-    setLineCoordinates(coordinates);
-  }, [events]);
+      setLineCoordinates(coordinates);
+    }
+  }, [events, showLines, fitBoundsOnLoad]);
 
 
   const nextEvent = useCallback(eventId => {
@@ -77,10 +83,10 @@ const EventMap = ({ events = [], className }) => {
     }
 
     const selEvents = [events[++i]];
-    const placeId   = selEvents[0].data.place.id;
+    const placeId   = selEvents[0].place.id;
 
     //  Check if next events have the same place
-    events.slice(i+1).reduce((isNext, event) => isNext && event.data.place.id === placeId && selEvents.push(event), true);
+    events.slice(i+1).reduce((isNext, event) => isNext && event.place.id === placeId && selEvents.push(event), true);
 
     setSelectedEvents(selEvents);
 
@@ -114,13 +120,14 @@ const EventMap = ({ events = [], className }) => {
 
     const clickHandler  = (e, f) => {
 
-      const clusterEvents = getLeaves()
+      let clusterEvents = getLeaves()
         .map(marker => find(events, {id: parseInt(marker.key)}))
 
       // Check if all events are at the same place
-      if(zoom > 12 || clusterEvents.filter(event => event.data.place.id !== clusterEvents[0].data.place.id).length === 0)
+      if(zoom > 12 || clusterEvents.filter(event => event.place.id !== clusterEvents[0].place.id).length === 0) {
+        clusterEvents = sortBy(clusterEvents, ['data.date']);
         marker_clickHandler(clusterEvents);
-      else {
+      } else {
         let bounds = new mapboxgl.LngLatBounds();
         clusterEvents.forEach(event => bounds.extend(event.coordinates));
         setFitBounds(bounds.toArray());
@@ -161,18 +168,21 @@ const EventMap = ({ events = [], className }) => {
   return (
     <div className={`EventMap ${className}`}>
 
-      <EventTimeline
-        events          = {events}
-        selectedEvents  = {selectedEvents}
-        isPlaying       = {isPlaying}
-        onEventClick    = {marker_clickHandler}
-        onPlayClick     = {playButton_clickHandler}
-      />
+      {showLines &&
+        <EventTimeline
+          events          = {events}
+          selectedEvents  = {selectedEvents}
+          isPlaying       = {isPlaying}
+          onEventClick    = {marker_clickHandler}
+          onPlayClick     = {playButton_clickHandler}
+        />
+      }
 
       <Map
         style                   = {`mapbox://styles/legionnaires/ckto0cfh40okl17pmek6tmiuz`}
         className               = "map"
         center                  = {center}
+        zoom                    = {[zoom]}
         fitBounds               = {fitBounds}
         fitBoundsOptions        = {FITBOUNDS_OPTIONS}
         renderChildrenInPortal  = {true}
@@ -218,7 +228,7 @@ const EventMap = ({ events = [], className }) => {
             className   = "popup"
           >
             <div className="title">
-              {selectedEvents[0].data.place.title}
+              {selectedEvents[0].place.title}
             </div>
             {selectedEvents.map(event => (
               <div key={event.id}>

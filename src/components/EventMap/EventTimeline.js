@@ -26,7 +26,7 @@ const EventTimeline = ({
             className = {isPlaying ? 'enabled' : null}
             onClick   = {onPlayClick}
           >
-            <img src={isPlaying ? pauseIcon : playIcon} />
+            <img src={isPlaying ? pauseIcon : playIcon} alt={isPlaying ? 'Pause' : 'Play'} />
           </Button>
         </div>
       }
@@ -47,7 +47,7 @@ const EventTimeline = ({
                   {l(`event.${event.data.event_type}`)}
                 </span>
                 <span className="details">
-                  {parseDate(event.data.date)}. {event.data.place.title}
+                  {parseDate(event.data.date)}. {event.place.title}
                 </span>
               </div>
             </div>
