@@ -11,8 +11,8 @@ import mapboxgl from 'mapbox-gl';
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { Link } from 'react-router-dom';
 import { find, findIndex, last, sortBy } from 'lodash';
-import { parseDate } from '../../utils';
-import { PlaceRoute } from '../../constants.js';
+import { getLabel as l, parseDate } from '../../utils';
+import { PlaceRoute, PersonRoute } from '../../constants.js';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import AnimatedLineLayer from './AnimatedLineLayer';
@@ -236,7 +236,8 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
             </div>
             {selectedEvents.map(event => (
               <div key={event.id}>
-                {parseDate(event.data.date)} - {event.title}
+                {parseDate(event.data.date)} - {l(`event.${event.data.event_type}`)}
+                <Link to={`${PersonRoute.to}${event.person.slug}`}> {event.person.title}</Link>
               </div>
             ))}
           </Popup>
