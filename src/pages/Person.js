@@ -48,11 +48,11 @@ const Person = () => {
           <Col>
             <Row>
               <Col lg={8}>
-                {birth && <EventCard type="birth" events={birth[person.id]} />}
-                {residence && <EventCard type="residence" events={residence[person.id]} />}
-                {enrollment && <EventCard type="enrollment" events={enrollment[person.id]} />}
-                {depot && <EventCard type="depot" events={depot[person.id]} />}
-                {death && <EventCard type="death" events={death[person.id]} />}
+                {birth && <EventCard type="birth" events={birth} />}
+                {residence && <EventCard type="residence" events={residence} />}
+                {enrollment && <EventCard type="enrollment" events={enrollment} />}
+                {depot && <EventCard type="depot" events={depot} />}
+                {death && <EventCard type="death" events={death} />}
               </Col>
 
               <Col lg>

@@ -149,11 +149,9 @@ export const eventsState = rj(
         const events = getData(state)?.results;
 
         for(const event of events || []) {
-          const personId  = event.person.id;
           const type      = event.data.event_type;
-          eventByTypes[type] = eventByTypes[type] || {};
-          eventByTypes[type][personId] = eventByTypes[type][personId] || [];
-          eventByTypes[type][personId].push(event);
+          eventByTypes[type] = eventByTypes[type] || [];
+          eventByTypes[type].push(event);
         }
 
         return eventByTypes;

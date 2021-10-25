@@ -6,6 +6,7 @@ import {
   StringParam,
   withDefault,
 } from 'use-query-params'
+import { find } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch  } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -84,9 +85,9 @@ const Search = () => {
                 slug      = {person.slug}
                 key       = {person.slug}
                 name      = {person.title}
-                place     = {eventsByType?.birth?.[person.id]?.[0].place.title}
-                birthYear = {parseYear(eventsByType?.birth?.[person.id]?.[0].data.date)}
-                deathYear = {parseYear(eventsByType?.death?.[person.id]?.[0].data.date)}
+                place     = {find(eventsByType.birth, ["person.id", person.id])?.place.title}
+                birthYear = {parseYear(find(eventsByType.birth, ['person.id', person.id])?.data.date)}
+                deathYear = {parseYear(find(eventsByType.death, ['person.id', person.id])?.data.date)}
               />
             )}
           </Col>

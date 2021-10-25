@@ -34,11 +34,11 @@ const Person = () => {
           <div key={type} className="mt-3">
             <Row>
               <Col>
-                  <h2>{l(`event.${type}`)}</h2>
+                  <h2>{l(`event.${type}`)} ({eventsByType[type].length})</h2>
               </Col>
             </Row>
             <Row>
-              {Object.keys(eventsByType[type]).map(personId => eventsByType[type][personId].map(event =>
+              {eventsByType[type].map(event =>
                 <Col key={event.slug} md={6}>
                   <Row className="event">
                     <Col xs="4">
@@ -51,7 +51,7 @@ const Person = () => {
                     </Col>
                   </Row>
                 </Col>
-              ))}
+              )}
             </Row>
           </div>
         )}
