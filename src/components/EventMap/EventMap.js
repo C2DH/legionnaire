@@ -9,8 +9,10 @@ import ReactMapboxGl, {
 import mapboxgl from 'mapbox-gl';
 //import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; // eslint-disable-line import/no-webpack-loader-syntax
+import { Link } from 'react-router-dom';
 import { find, findIndex, last, sortBy } from 'lodash';
 import { parseDate } from '../../utils';
+import { PlaceRoute } from '../../constants.js';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import AnimatedLineLayer from './AnimatedLineLayer';
@@ -201,7 +203,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
               className   = "marker"
               onClick     = {_ => marker_clickHandler([event])}
             >
-              <PinPoint label={String.fromCharCode(65 + i)} />
+              <PinPoint label={showLines ? String.fromCharCode(65 + i) : null} />
             </Marker>
           ))}
         </Cluster>
@@ -228,7 +230,9 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
             className   = "popup"
           >
             <div className="title">
-              {selectedEvents[0].place.title}
+              <Link to={`${PlaceRoute.to}${selectedEvents[0].place.slug}`}>
+                {selectedEvents[0].place.title}
+              </Link>
             </div>
             {selectedEvents.map(event => (
               <div key={event.id}>

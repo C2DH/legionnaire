@@ -26,6 +26,7 @@ export function useGetPerson(id) {
   );
 }
 
+
 /**
  * Hook to get the list of legionnaires from the backend
  * @param   offset  offset of the current page to load
@@ -52,6 +53,7 @@ export function useGetPeople(offset = 0, starts) {
   );
 }
 
+
 /**
  * Hook to get a place identified by its id from the backend
  * @param   id  id or slug of the place to get
@@ -63,6 +65,7 @@ export function useGetPlace(id) {
     true
   );
 }
+
 
 /**
  * Hook to get events of people identified by their id from the backend
@@ -106,6 +109,27 @@ export function useGetEventsByPersonId(id, types) {
   return result;
 }
 
+
+/**
+ * Hook to get all events
+ */
+const eventsParams = {
+  filters: {
+    data__type: 'event'
+  },
+  detailed: true,
+  orderby: 'data__date',
+  limit: ALL_RECORDS
+};
+export function useGetEvents() {
+  return useRunRj(
+    eventsState,
+    [ eventsParams ],
+    true
+  );
+}
+
+
 /**
  * Hook to get a media identified by its id from the backend
  * @param   id  id or slug of the media to get
@@ -120,6 +144,7 @@ export function useGetMedia(id) {
     })
   );
 }
+
 
 /**
  * Hook to get paginated list of medias
@@ -152,6 +177,7 @@ export function useGetMedias(offset = 0, type) {
   );
 }
 
+
 /**
  * Hook to get type facets of medias
  */
@@ -175,6 +201,7 @@ export function useGetMediaFacets() {
     })
   );
 }
+
 
 /**
  * Hook to do a search on people from the backend
@@ -200,6 +227,7 @@ export function useSearchPeople(query='') {
     true
   );
 }
+
 
 /**
  * Hook to do a search on places from the backend

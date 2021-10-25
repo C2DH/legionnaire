@@ -137,12 +137,15 @@ export const eventsState = rj(
 
     //  Selector to get events in an object with the event type as key
     selectors: ({ getData }) => ({
-      getEvents: state => getData(state)?.results.map(
-        event => ({
-          ...event,
-          coordinates: [...event.place.data.coordinates.geometry.coordinates].reverse()
-        })
-      ),
+      getEvents: state => getData(state)?.results
+        .filter(event => !isNaN(event.place?.data.coordinates.geometry.coordinates[0]))
+        .map(
+          event => ({
+            ...event,
+            coordinates: [...event.place?.data.coordinates.geometry.coordinates].reverse()
+          })
+        )
+      ,
       getEventsByType: state => {
 
         const eventByTypes = {};
