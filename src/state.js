@@ -1,7 +1,7 @@
 import { rj } from 'react-rocketjump';
 import rjCache from 'react-rocketjump/plugins/cache';
 import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
-import { find } from 'lodash';
+import { find, sortBy } from 'lodash';
 
 import { getDocument, getDocuments } from './api';
 import {
@@ -149,7 +149,7 @@ export const eventsState = rj(
       getEventsByType: state => {
 
         const eventByTypes = {};
-        const events = getData(state)?.results;
+        const events = sortBy(getData(state)?.results, ['person.title']);
 
         for(const event of events || []) {
           const type      = event.data.event_type;
