@@ -1,7 +1,7 @@
 import { rj } from 'react-rocketjump';
 import rjCache from 'react-rocketjump/plugins/cache';
 import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
-import { find, sortBy } from 'lodash';
+import { find, sortBy, map, uniqBy } from 'lodash';
 
 import { getDocument, getDocuments } from './api';
 import {
@@ -120,10 +120,12 @@ export const searchPlacesState = rj(
 
     //  Selector to get events in an object with the event type as key
     selectors: ({ getData }) => ({
-      getPlaces: state => getData(state)?.results || []
+      getPlaces: state => getData(state)?.results || [],
+      getPlacesIds: state => getData(state)?.results.map(place => place.id)
     }),
     computed: {
-      places: 'getPlaces'
+      places: 'getPlaces',
+      placesIds: 'getPlacesIds'
     }
   }
 );
@@ -158,12 +160,14 @@ export const eventsState = rj(
         }
 
         return eventByTypes;
-      }
+      },
+      getPeople: state => uniqBy(map(getData(state)?.results, 'person'), 'id')
     }),
 
     computed: {
       events: 'getEvents',
-      eventsByType: 'getEventsByType'
+      eventsByType: 'getEventsByType',
+      people: 'getPeople'
     },
 
     // Reducer to inject related document (place and person) directly in the data with the type as key

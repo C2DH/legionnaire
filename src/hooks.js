@@ -203,6 +203,40 @@ export function useGetMediaFacets() {
 }
 
 
+export function useSearch(query) {
+
+  const [{ people, peopleIds }]     = useSearchPeople(query);
+  const [{ places, placesIds }]     = useSearchPlaces(query);
+
+  //  Memorize params to avoid infinite loop
+  const params = useMemo(() => {
+
+    if(query && (!peopleIds || !placesIds)) return null;
+
+    let params = {
+      filters: {
+        data__type: 'event',
+        documents__in: query ? peopleIds.concat(placesIds) : undefined
+      },
+      detailed: true,
+      orderby: 'data__date',
+      limit: ALL_RECORDS
+    };
+
+    return params;
+
+  }, [peopleIds, placesIds, query]);
+
+  const [{ events, eventsByType }] = useRunRj(
+    eventsState,
+    [ deps.maybeNull(params) ],
+    true
+  );
+
+  return [{ people, places, events, eventsByType }];
+}
+
+
 /**
  * Hook to do a search on people from the backend
  * @param   q       query to search
