@@ -66,6 +66,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
     } else
       setCenter(events[0].coordinates);
 
+    setSelectedEvents();
     // To fix the issue when the map is resized in the search page
     mapRef.current?.resize();
 
