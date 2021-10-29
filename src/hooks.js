@@ -9,6 +9,7 @@ import {
   searchPeopleState,
   searchPlacesState,
   eventsState,
+  allEventsState,
   mediasState
 } from './state';
 
@@ -123,7 +124,7 @@ const eventsParams = {
 };
 export function useGetEvents() {
   return useRunRj(
-    eventsState,
+    allEventsState,
     [ eventsParams ],
     true
   );
@@ -228,7 +229,7 @@ export function useSearch(query) {
   }, [peopleIds, placesIds, query]);
 
   const [{ events, eventsByType }] = useRunRj(
-    eventsState,
+    query ? eventsState : allEventsState,
     [ deps.maybeNull(params) ],
     true
   );

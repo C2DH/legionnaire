@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ReactMapboxGl, {
   Marker,
   Cluster,
@@ -36,9 +36,18 @@ const FITBOUNDS_OPTIONS = {
   }
 };
 
+const FITBOUNDS_OPTIONS_SMALL = {
+  padding: {
+    top:    50,
+    bottom: 50,
+    left:   100,
+    right:  100
+  }
+}
 
 const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad = false }) => {
 
+  const mapRef                                = useRef();
   const [zoom, setZoom]                       = useState(7);
   const [center, setCenter]                   = useState([2.1008033, 47.6148384]);
   const [fitBounds, setFitBounds]             = useState(null);
@@ -56,6 +65,9 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
       setFitBounds(bounds.toArray());
     } else
       setCenter(events[0].coordinates);
+
+    // To fix the issue when the map is resized in the search page
+    mapRef.current?.resize();
 
     if(showLines) {
       const coordinates = events.slice(0, -1).map((event, i) => [
@@ -186,7 +198,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
         center                  = {center}
         zoom                    = {[zoom]}
         fitBounds               = {fitBounds}
-        fitBoundsOptions        = {FITBOUNDS_OPTIONS}
+        fitBoundsOptions        = {showLines ? FITBOUNDS_OPTIONS : FITBOUNDS_OPTIONS_SMALL}
         renderChildrenInPortal  = {true}
         onClick                 = {() => setSelectedEvents(null)}
         onZoomEnd               = {map => setZoom(map.transform._zoom)}
@@ -245,6 +257,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
 
         <MapContext.Consumer>
           {(map) => {
+            mapRef.current = map;
             map.on("wheel", e => !e.originalEvent.ctrlKey && !e.originalEvent.metaKey && e.preventDefault());
           }}
         </MapContext.Consumer>

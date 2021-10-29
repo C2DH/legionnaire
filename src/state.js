@@ -1,5 +1,5 @@
 import { rj } from 'react-rocketjump';
-import rjCache from 'react-rocketjump/plugins/cache';
+import rjCache, { InMemoryStore } from 'react-rocketjump/plugins/cache';
 import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
 import { find, sortBy, map, uniqBy } from 'lodash';
 
@@ -130,11 +130,8 @@ export const searchPlacesState = rj(
   }
 );
 
-export const eventsState = rj(
-  rjCache({
-    ns: 'events',
-    size: 50
-  }), {
+const eventConfig = {
+
     effect: getDocuments,
 
     //  Selector to get events in an object with the event type as key
@@ -194,7 +191,22 @@ export const eventsState = rj(
 
       return oldReducer(state, action) // forward any other action to the default reducer
     }
-  }
+};
+
+export const eventsState = rj(
+  rjCache({
+    ns: 'events',
+    size: 50
+  }), eventConfig
+);
+
+// Use InMemoryStore for the cache for all events because it's too big for the SessionStorageStore
+export const allEventsState = rj(
+  rjCache({
+    ns: 'allEvents',
+    size: 1,
+    store: InMemoryStore
+  }), eventConfig
 );
 
 export const mediasState = rj(
