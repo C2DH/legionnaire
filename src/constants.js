@@ -14,12 +14,14 @@ export const PlaceRoute = { to:'/browse/place/', label: 'Place'}
 export const SearchRoute = { to: '/search', label: 'Recherche' }
 export const CollectionRoute = { to: '/collection', label: 'Collection' }
 export const MediaRoute = { to: '/collection/', label: 'Media' }
+export const TimelineRoute = { to: '/timeline', label: 'Chronologie' }
 export const TermsOfUseRoute = { to:'/terms', label: 'Conditions d\'utilisation'}
 export const PrimaryRoutes = [
   AboutRoute,
   BrowseRoute,
   SearchRoute,
-  CollectionRoute
+  CollectionRoute,
+  TimelineRoute
 ];
 
 export const TYPE_IMAGE = "image";

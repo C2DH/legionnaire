@@ -19,9 +19,12 @@ const Event = ({ type, events }) => (
       <h2>{l(`event.${type}.place`)}</h2>
       {events.map(event =>
         <div key={event.slug}>
-          <Link to={`${PlaceRoute.to}${event.place.slug}`}>
-            {event.place.data.city} ({event.place.data.country})
-          </Link>
+          {event.place &&
+            <Link to={`${PlaceRoute.to}${event.place.slug}`}>
+              {event.place.data.city} ({event.place.data.country})
+            </Link>
+          }
+          &nbsp;
         </div>
       )}
     </Col>

@@ -4,6 +4,7 @@ import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/l
 import { find, sortBy, map, uniqBy } from 'lodash';
 
 import { getDocument, getDocuments } from './api';
+import { parseYear } from './utils';
 import {
   MEDIA_VIGNETTE,
   TYPE_MEDAL,
@@ -218,4 +219,32 @@ export const mediasState = rj(
     pageSize: 50,
     pagination: limitOffsetPaginationAdapter,
   }), getDocuments
+);
+
+export const timelineEventsState = rj(
+  rjCache({
+    ns: 'timelineEvents',
+    size: 1
+  }), {
+    effect: getDocuments,
+
+    selectors: ({ getData }) => ({
+      getEvents: state => getData(state)?.results || [],
+      getEventsByYear: state =>
+        getData(state)?.results.reduce((eventByYear, event) => {
+
+          if(event.data.date) {
+            let year = parseYear(event.data.date);
+            eventByYear[year] = eventByYear[year] || [];
+            eventByYear[year].push(event);
+          }
+
+          return eventByYear;
+        }, {}) || {}
+    }),
+    computed: {
+      events: 'getEvents',
+      eventsByYear: 'getEventsByYear'
+    }
+  }
 );

@@ -10,7 +10,7 @@ const Header = () => {
       <Navbar
         className = "Header"
         fixed     = "top"
-        expand    = "md"
+        expand    = "lg"
         bg        = "light"
       >
         <Navbar.Brand

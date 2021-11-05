@@ -14,6 +14,7 @@ const AllPlaces = lazy(() => import('./pages/AllPlaces'));
 const Search = lazy(() => import('./pages/Search'));
 const Collection = lazy(() => import('./pages/Collection'));
 const Media = lazy(() => import('./pages/Media'));
+const Timeline = lazy(() => import('./pages/Timeline'));
 const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 /* Pages routing by language */
@@ -68,6 +69,9 @@ const AppRoutes = ({enableGA=false}) => {
           </Route>
           <Route exact path="/collection/:slug">
             <Media />
+          </Route>
+          <Route exact path="/timeline">
+            <Timeline />
           </Route>
           <Route exact path="/terms">
             <TermsOfUse />

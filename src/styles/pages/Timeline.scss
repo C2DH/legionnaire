@@ -1,0 +1,19 @@
+.Timeline {
+
+  h2 {
+    font-size: 1.25em;
+    font-weight: normal;
+    margin-left: 32px;
+    line-height: 1;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 32px;
+      border-bottom: 2px solid var(--bs-dark);
+      left: -32px;
+      bottom: 3px;
+    }
+  }
+}

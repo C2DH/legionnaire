@@ -17,7 +17,7 @@ const Media = () => {
     <Container fluid className="Media">
       <Row className="h-100">
         <Col md={4} className="metadata mb-3">
-            <h1>{media?.title}</h1>
+            <h1>{media?.data.title}</h1>
             <div>
               <span className="label">Catégorie : </span>{l(media?.data.type)}
             </div>

@@ -10,7 +10,8 @@ import {
   searchPlacesState,
   eventsState,
   allEventsState,
-  mediasState
+  mediasState,
+  timelineEventsState
 } from './state';
 
 const ALL_RECORDS = 10000;
@@ -285,6 +286,26 @@ export function useSearchPlaces(query='') {
   return useRunRj(
     searchPlacesState,
     [ deps.maybeNull(params) ],
+    true
+  );
+}
+
+
+/**
+ * Hook to get all timeline events
+ */
+const timelineEventsParams = {
+  filters: {
+    data__type: 'timeline-event'
+  },
+  detailed: true,
+  orderby: 'data__date',
+  limit: ALL_RECORDS
+};
+export function useGetTimelineEvents() {
+  return useRunRj(
+    timelineEventsState,
+    [ timelineEventsParams ],
     true
   );
 }
