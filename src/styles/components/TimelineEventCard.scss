@@ -5,8 +5,24 @@
   .thumbnails {
     flex: 0 0 174px;
 
-    img {
-      width: 100%;
+    a {
+      margin-bottom: 5px;
+      position: relative;
+      display: block;
+
+      img {
+        width: 100%;
+      }
+
+      &:hover::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: 8px solid var(--bs-primary);
+      }
     }
   }
 
