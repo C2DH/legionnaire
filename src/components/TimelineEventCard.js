@@ -6,8 +6,6 @@ import { MediaRoute } from '../constants';
 
 import '../styles/components/TimelineEventCard.scss';
 
-const IMAGE_WIDTH = 100;
-
 
 const TimelineEventCard = ({ event }) => (
   <Row className="TimelineEventCard mt-3">
@@ -15,13 +13,11 @@ const TimelineEventCard = ({ event }) => (
       {event.documents.map(media =>
 
         <Link to={`${MediaRoute.to}${media.slug}`}>
-          <div className="picture" style={{ width: IMAGE_WIDTH, height: IMAGE_WIDTH / media.data.resolutions.thumbnail.width * media.data.resolutions.thumbnail.height }}>
-            <img
-              key = {media.slug}
-              src = {media.data.resolutions?.thumbnail.url}
-              alt = {media.data.title}
-            />
-          </div>
+          <img
+            key = {media.slug}
+            src = {media.data.resolutions?.thumbnail.url}
+            alt = {media.data.title}
+          />
         </Link>
 
       )}

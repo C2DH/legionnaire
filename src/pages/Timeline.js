@@ -12,11 +12,6 @@ const Timeline = () => {
 
   return (
     <Container className="Timeline">
-      <Row>
-        <Col>
-          <h1>{TimelineRoute.label}</h1>
-        </Col>
-      </Row>
       <Row className="mt-3">
         <Col lg={6}>
           {Object.entries(eventsByYear).map(([year, events]) =>
