@@ -3,13 +3,15 @@ import rjCache, { InMemoryStore } from 'react-rocketjump/plugins/cache';
 import rjList, { limitOffsetPaginationAdapter } from 'react-rocketjump/plugins/list';
 import { find, sortBy, map, uniqBy } from 'lodash';
 
-import { getDocument, getDocuments } from './api';
-import { parseYear } from './utils';
+import { getDocument, getDocuments, getStory } from './api';
+import { parseYear, translate } from './utils';
 import {
   MEDIA_VIGNETTE,
   TYPE_MEDAL,
+  TYPE_PERSON,
   EVENT_BIRTH,
-  EVENT_DEATH
+  EVENT_DEATH,
+  defaultLanguage
 } from './constants';
 
 
@@ -25,6 +27,22 @@ export const docsState = rj(
     ns: 'millerDocuments',
     size: 50
   }), getDocuments
+);
+
+export const staticPageState = rj(
+  rjCache({
+    ns: 'staticPage',
+    size: 5
+  }), {
+    effect: getStory,
+
+    selectors: ({ getData }) => ({
+      getPage: state => translate(getData(state), defaultLanguage)
+    }),
+    computed: {
+      page: 'getPage'
+    }
+  }
 );
 
 export const personState = rj(
@@ -210,6 +228,27 @@ export const allEventsState = rj(
   }), eventConfig
 );
 
+export const mediaState = rj(
+  rjCache({
+    ns: 'media',
+    size: 50
+  }), {
+    effect: getDocument,
+
+    //  Selector to get events in an object with the event type as key
+    selectors: ({ getData }) => ({
+      getMedia: state => getData(state),
+      getPeople: state => getData(state)?.documents.filter(doc => doc.data.type === TYPE_PERSON),
+      getRelatedMedias: state => getData(state)?.documents.filter(doc => doc.data.type !== TYPE_PERSON)
+    }),
+    computed: {
+      media: 'getData',
+      people: 'getPeople',
+      relatedMedias: 'getRelatedMedias'
+    }
+  }
+);
+
 export const mediasState = rj(
   rjCache({
     ns: 'medias',
@@ -218,7 +257,20 @@ export const mediasState = rj(
   rjList({
     pageSize: 50,
     pagination: limitOffsetPaginationAdapter,
-  }), getDocuments
+  }), {
+    effect: getDocuments,
+
+    //  Selector to get events in an object with the event type as key
+    selectors: ({ getNext }) => ({
+      getNextOffset: state => getNext(state)?.offset
+    }),
+    computed: {
+      medias: 'getList',
+      count: 'getCount',
+      canLoadMore: 'hasNext',
+      nextOffset: 'getNextOffset'
+    }
+  }
 );
 
 export const timelineEventsState = rj(

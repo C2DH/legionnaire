@@ -73,7 +73,7 @@ const AppRoutes = ({enableGA=false}) => {
           <Route exact path="/timeline">
             <Timeline />
           </Route>
-          <Route exact path="/terms">
+          <Route exact path="/terms-of-use">
             <TermsOfUse />
           </Route>
           <Route path="*">

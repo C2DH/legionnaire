@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useRunRj, deps } from 'react-rocketjump';
 import {
-  docState,
+  staticPageState,
   docsState,
   personState,
   peopleState,
@@ -10,11 +10,24 @@ import {
   searchPlacesState,
   eventsState,
   allEventsState,
+  mediaState,
   mediasState,
   timelineEventsState
 } from './state';
 
 const ALL_RECORDS = 10000;
+
+/**
+ * Hook to get a static page content identified by its id or slug from the backend
+ * @param   id  id or slug of the static page content to get
+ */
+export function useGetStaticPage(id) {
+  return useRunRj(
+    staticPageState,
+    [ id ],
+    true
+  );
+}
 
 /**
  * Hook to get a person identified by its id from the backend
@@ -138,12 +151,9 @@ export function useGetEvents() {
  */
 export function useGetMedia(id) {
   return useRunRj(
-    docState,
+    mediaState,
     [ id ],
-    true,
-    (state, { getData }) => ({
-      media: getData(state)
-    })
+    true
   );
 }
 
@@ -169,13 +179,7 @@ export function useGetMedias(offset = 0, type) {
   return useRunRj(
     mediasState,
     [ deps.withMeta(params, {append: offset !== 0}) ],
-    false,
-    (state, { getList, getCount, hasNext, getNext }) => ({
-      medias: getList(state),
-      count: getCount(state),
-      canLoadMore: hasNext(state),
-      nextOffset: getNext(state)?.offset
-    })
+    false
   );
 }
 

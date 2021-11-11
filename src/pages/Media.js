@@ -11,7 +11,7 @@ import '../styles/pages/Media.scss';
 const Media = () => {
 
   const { slug }    = useParams();
-  const [{ media }] = useGetMedia(slug);
+  const [{ media, people }] = useGetMedia(slug);
 
   return (
     <Container fluid className="Media">
@@ -24,12 +24,16 @@ const Media = () => {
             <div>
               <span className="label">Source : </span>{media?.data.source}
             </div>
-            <div>
-              <span className="label">Légionnaire : </span>
-              <Link to={PersonRoute.to + media?.documents[0].slug}>
-                {media?.documents[0].title}
-              </Link>
-            </div>
+            {people?.length > 0 &&
+              <div>
+                <span className="label">Légionnaire(s) : </span>
+                {people.map(person =>
+                  <Link key={person.slug} to={PersonRoute.to + person.slug}>
+                    {person.title}
+                  </Link>
+                )}
+              </div>
+            }
         </Col>
 
         <Col md={8} className="h-100">

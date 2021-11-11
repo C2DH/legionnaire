@@ -12,16 +12,30 @@
 
       img {
         width: 100%;
+        transition: all 0.5s;
+        -webkit-filter: brightness(80%);
+        -moz-filter: brigtness(80%);
+        -ms-filter: brightness(80%);
+        filter: brightness(80%);
       }
 
-      &:hover::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        border: 8px solid var(--bs-primary);
+      &:hover {
+        img {
+          -webkit-filter: brightness(100%);
+          -moz-filter: brightness(100%);
+          -ms-filter: brightness(100%);
+          filter: brightness(100%);
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          border: 8px solid var(--bs-primary);
+        }
       }
     }
   }
@@ -39,18 +53,11 @@
       font-size: 0.75rem;
 
       a {
-        color: var(--bs-dark);
-        text-decoration: underline;
         padding-right: 1rem;
-
-        &:hover {
-          color: var(--link-hover-color);
-        }
       }
 
       .date {
-        color: var(--bs-primary);
-        text-decoration: underline;
+        text-transform: uppercase;
       }
     }
   }

@@ -11,15 +11,9 @@ const TimelineEventCard = ({ event }) => (
   <Row className="TimelineEventCard mt-3">
     <Col className="thumbnails ms-md-5">
       {event.documents.map(media =>
-
-        <Link to={`${MediaRoute.to}${media.slug}`}>
-          <img
-            key = {media.slug}
-            src = {media.data.resolutions?.thumbnail.url}
-            alt = {media.data.title}
-          />
+        <Link key={media.slug} to={`${MediaRoute.to}${media.slug}`}>
+          <img src={media.data.resolutions?.thumbnail.url} alt={media.data.title} />
         </Link>
-
       )}
     </Col>
     <Col className="details ps-0">

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import ReactMarkdown from 'react-markdown';
+
 import Particles from '../components/Particles';
+import { useGetStaticPage } from '../hooks';
+import { HomeRoute } from '../constants';
+
 import '../styles/pages/Home.scss';
+
 
 const images = [
   "/images/intro-01.jpg",
@@ -10,6 +16,7 @@ const images = [
   "/images/intro-04.jpg",
   "/images/intro-05.jpg"
 ];
+
 
 const Home = () => {
 
@@ -26,6 +33,8 @@ const Home = () => {
   const [looping, setLooping]         = useState(true);
   const [touching, setTouching]       = useState(false);
   const [hold, setHold]               = useState(false);
+
+  const [{ page }]                    = useGetStaticPage(HomeRoute.slug);
 
   const particles_changeHandler = (type, value) => {
     switch(type) {
@@ -51,14 +60,11 @@ const Home = () => {
     <Container>
       <Row className="justify-content-center">
         <Col md="6" className="intro pt-5">
-          <h1>Légionnaires</h1>
+          <h1>{page?.data.title}</h1>
           <div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
-            </p>
-            <p>
-              Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
-            </p>
+            <ReactMarkdown linkTarget="_blank">
+              {page?.data.abstract}
+            </ReactMarkdown>
           </div>
         </Col>
         <Col md="6" className="animation pt-5">

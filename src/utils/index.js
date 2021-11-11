@@ -1,4 +1,6 @@
 import labels from '../labels.json';
+import _ from 'lodash';
+import { defaultLanguage } from '../constants';
 
 export const getLabel = key => labels[key] || key;
 
@@ -26,3 +28,8 @@ export const parseYear = (dateStr) => {
     year: "numeric"
   });
 }
+
+export const translate = doc =>
+  _.isPlainObject(doc) ?
+    (_.isUndefined(doc[defaultLanguage]) ? _(doc).mapValues(translate).value() : doc[defaultLanguage]) :
+    (_.isArray(doc) ? doc.map(translate) : doc)
