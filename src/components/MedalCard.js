@@ -52,6 +52,7 @@ const MedalCard = ({ medal }) => {
       >
         <h2>{medal.title}</h2>
         <div className="info">
+          <div className="my-1">{medal.data.citation}</div>
           {medal.data.date &&
             <span>
               {parseDate(medal.data.date)}

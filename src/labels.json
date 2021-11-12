@@ -1,9 +1,10 @@
 {
   "all": "Tout",
   "archive": "Archives",
-  "document-officiel": "Documents officiels",
-  "fiche-matricule": "Fiches matricules",
-  "photo": "Photos",
+  "officiel": "Documents officiels",
+  "fiche_matricule": "Fiches matricules",
+  "monument": "Monuments",
+  "vignette": "Vignettes",
 
   "event.birth": "Naissance",
   "event.birth.date": "Date de naissance",

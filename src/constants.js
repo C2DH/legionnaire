@@ -37,12 +37,12 @@ export const EVENT_BIRTH = "birth";
 export const EVENT_DEATH = "death";
 
 export const MEDAL_ICONS = {
-  "Citation": CitationIcon,
-  "Croix": CroixIcon,
-  "Décoration": DecorationIcon,
-  "Document": DocumentIcon,
-  "Félicitations": CongratulationIcon,
-  "Médaille": MedalIcon,
-  "Légion d'honneur": LegionHonorIcon,
-  "Ordre": OrdreIcon
+  "citation": CitationIcon,
+  "croix": CroixIcon,
+  "décoration": DecorationIcon,
+  "document": DocumentIcon,
+  "félicitations": CongratulationIcon,
+  "médaille": MedalIcon,
+  "légion d'honneur": LegionHonorIcon,
+  "ordre": OrdreIcon
 }
