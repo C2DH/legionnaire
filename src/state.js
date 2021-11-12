@@ -56,12 +56,16 @@ export const personState = rj(
     selectors: ({ getData }) => ({
       getPerson: state => getData(state),
       getThumbnail: state => getData(state)?.documents.filter(doc => doc.data.type === MEDIA_VIGNETTE)[0],
-      getMedals: state => getData(state)?.documents.filter(doc => doc.data.type === TYPE_MEDAL)
+      getMedals: state => getData(state)?.documents.filter(doc => doc.data.type === TYPE_MEDAL),
+      getMilitaryRanks: state => sortBy(getData(state)?.data.military_rank, ['date']),
+      getProfessions: state => sortBy(getData(state)?.data.profession, ['date'])
     }),
     computed: {
       person: 'getPerson',
       thumbnail: 'getThumbnail',
-      medals: 'getMedals'
+      medals: 'getMedals',
+      militaryRanks: 'getMilitaryRanks',
+      professions: 'getProfessions'
     }
   }
 );

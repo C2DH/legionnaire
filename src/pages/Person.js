@@ -1,7 +1,9 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
+
 import { useGetPerson, useGetEventsByPersonId } from '../hooks';
+import { parseDate } from '../utils';
 import EventMap from '../components/EventMap';
 import EventCard from '../components/EventCard';
 import MedalCard from '../components/MedalCard';
@@ -17,7 +19,7 @@ import '../styles/pages/Person.scss';
 const Person = () => {
 
   const { slug } = useParams();
-  const [{ person, thumbnail, medals }] = useGetPerson(slug);
+  const [{ person, thumbnail, medals, militaryRanks, professions }] = useGetPerson(slug);
   const [{ events, eventsByType }] = useGetEventsByPersonId(person?.id);
   const { birth, residence, enrollment, depot, death } = eventsByType || {};
 
@@ -59,13 +61,42 @@ const Person = () => {
                 {medals?.length > 0 &&
                   <React.Fragment>
                     <h2>Parcours militaire</h2>
-                    <div className="medals mt-4">
+                    <div className="medals my-4">
                       {medals?.map(medal =>
                         <MedalCard key={medal.slug} medal={medal} />
                       )}
                     </div>
                   </React.Fragment>
                 }
+
+                {militaryRanks.length > 0 &&
+                  <React.Fragment>
+                    <h2>Grade militaire</h2>
+                    {militaryRanks.map(rank =>
+                      <div key={rank.name + rank.date}>
+                        <span className="rank-name">{rank.name}</span>
+                        {rank.date &&
+                          <span> ({parseDate(rank.date)})</span>
+                        }
+                      </div>
+                    )}
+                  </React.Fragment>
+                }
+
+                {professions.length > 0 &&
+                  <React.Fragment>
+                    <h2 className="mt-1">Professions</h2>
+                    {professions.map(profession =>
+                      <div key={profession.name + profession.date}>
+                        <span className="rank-name">{profession.name}</span>
+                        {profession.date &&
+                          <span> ({parseDate(profession.date)})</span>
+                        }
+                      </div>
+                    )}
+                  </React.Fragment>
+                }
+
               </Col>
             </Row>
           </Col>
@@ -104,7 +135,7 @@ Lorem ipsum (version originale)
                       target  = "_blank"
                       rel     = "noreferrer"
                     >
-                      {doc.data.source}
+                      {doc.title}
                     </a>
                   </li>
               )}
