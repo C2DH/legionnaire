@@ -2,22 +2,35 @@ import React  from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+
 import { useGetMedia } from '../hooks';
 import { getLabel as l } from '../utils';
-import { PersonRoute } from '../constants.js';
+import { PersonRoute, MediaRoute } from '../constants.js';
+import { ReactComponent as LeftIcon } from '../images/icons/left.svg';
+import { ReactComponent as RightIcon } from '../images/icons/right.svg';
 
 import '../styles/pages/Media.scss';
+
 
 const Media = () => {
 
   const { slug }    = useParams();
-  const [{ media, people }] = useGetMedia(slug);
+  const [{
+    media,
+    people,
+    relatedMedias
+  }] = useGetMedia(slug);
 
   return (
     <Container fluid className="Media">
       <Row className="h-100">
         <Col md={4} className="metadata mb-3">
-            <h1>{media?.data.title}</h1>
+            <h1>
+              {media?.data.title}
+              {media?.data.index &&
+                <span> (page {media?.data.index}/{relatedMedias.length + 1})</span>
+              }
+            </h1>
             <div>
               <span className="label">Catégorie : </span>{l(media?.data.type)}
             </div>
@@ -46,8 +59,19 @@ const Media = () => {
                     <button className="zoomOut" onClick={() => zoomOut()}>-</button>
                   </div>
 
+                  {media?.data.index && media.data.index > 1 &&
+                    <Link to={MediaRoute.to + relatedMedias[media.data.index - 2].slug}>
+                      <LeftIcon className="left-icon" />
+                    </Link>
+                  }
+                  {media?.data.index && media.data.index <= relatedMedias.length &&
+                    <Link to={MediaRoute.to + relatedMedias[media.data.index - 1].slug}>
+                      <RightIcon className="right-icon" />
+                    </Link>
+                  }
+
                   <TransformComponent>
-                    <img src={media?.attachment} alt={media?.title} onLoad={_ => centerView()} />
+                    <img src={media?.attachment} alt={media?.title} onLoad={_ => centerView(1)} />
                   </TransformComponent>
                 </React.Fragment>
               )}

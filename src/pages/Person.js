@@ -116,7 +116,7 @@ Lorem ipsum (version originale)
                   <Link to={`${MediaRoute.to}${doc.slug}`}>
                     <img src={doc.data.resolutions?.medium.url} alt={doc.title} />
                   </Link>
-                  {doc.data.source}
+                  {doc.title}
                 </div>
             )}
           </Col>

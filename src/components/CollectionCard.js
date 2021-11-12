@@ -6,7 +6,7 @@ import { MediaRoute } from '../constants';
 import '../styles/components/CollectionCard.scss';
 
 const TRUNCATE_OPTIONS = {
-  length: 90,
+  length: 85,
   separator: /[, ]/
 }
 
@@ -17,7 +17,12 @@ const CollectionCard = ({ doc }) => (
         <img src={doc.data.resolutions?.thumbnail.url} alt={doc.title} />
       </div>
     </div>
-    <div>{truncate(doc.title, TRUNCATE_OPTIONS)}</div>
+    <div>
+      {truncate(doc.title, TRUNCATE_OPTIONS)}
+      {doc.data.index &&
+        <span> (p. {doc.data.index})</span>
+      }
+    </div>
   </Link>
 );
 

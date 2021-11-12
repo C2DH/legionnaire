@@ -239,7 +239,7 @@ export const mediaState = rj(
     selectors: ({ getData }) => ({
       getMedia: state => getData(state),
       getPeople: state => getData(state)?.documents.filter(doc => doc.data.type === TYPE_PERSON),
-      getRelatedMedias: state => getData(state)?.documents.filter(doc => doc.data.type !== TYPE_PERSON)
+      getRelatedMedias: state => sortBy(getData(state)?.documents.filter(doc => doc.data.type !== TYPE_PERSON && doc.data.index), ['data.index'])
     }),
     computed: {
       media: 'getData',
