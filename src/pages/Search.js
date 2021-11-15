@@ -14,29 +14,6 @@ import { PersonRoute, PlaceRoute } from '../constants.js';
 
 import '../styles/pages/Search.scss';
 
-/*
-const PersonRecord = ({ slug, name, place, birthYear, deathYear }) => (
-  <Row className="PersonRecord my-2" key={slug}>
-    <Col xs={12} md={5}>
-      <Link to={`${PersonRoute.to}${slug}`}>
-        {name}
-      </Link>
-    </Col>
-    <Col xs="auto" md={5}>
-      <Link to={PlaceRoute.to + place?.slug}>
-        {place?.title}
-      </Link>
-    </Col>
-    <Col>
-      {birthYear}
-      {deathYear &&
-        <span> - {deathYear}</span>
-      }
-    </Col>
-  </Row>
-);
-*/
-
 const Search = () => {
 
   const queryField                                = useRef(null);
@@ -97,7 +74,7 @@ const Search = () => {
               {query.q && places.length > 0 &&
                 <Row className="my-5">
                   <Col>
-                    <h2>Places</h2>
+                    <h2>Lieux</h2>
                     {places.map(place =>
                       <Row key={place.slug} className="my-2">
                         <Col>

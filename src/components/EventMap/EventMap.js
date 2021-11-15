@@ -10,7 +10,7 @@ import mapboxgl from 'mapbox-gl';
 //import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { Link } from 'react-router-dom';
-import { find, findIndex, last, sortBy } from 'lodash';
+import { find, findIndex, last, sortBy, isEmpty } from 'lodash';
 import { getLabel as l, parseDate } from '../../utils';
 import { PlaceRoute, PersonRoute } from '../../constants.js';
 
@@ -52,11 +52,12 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
   const [center, setCenter]                   = useState([2.1008033, 47.6148384]);
   const [fitBounds, setFitBounds]             = useState(null);
   const [selectedEvents, setSelectedEvents]   = useState(null);
+  const [timelineEvents, setTimelineEvents]   = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
   const [isPlaying, setPlaying]               = useState(false);
   const [audio]                               = useState(_ => new Audio("/indiana-jones.mp3"));
 
-  useEffect(_ => _ => audio.pause(), []);
+  useEffect(_ => _ => audio.pause(), [audio]);
 
   useEffect(_ => {
     if(events.length === 0) return;
@@ -64,51 +65,58 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
     if(fitBoundsOnLoad) {
       let bounds = new mapboxgl.LngLatBounds();
       events.forEach(event => bounds.extend(event.coordinates));
-      setFitBounds(bounds.toArray());
+      setTimeout(_ => setFitBounds(bounds.toArray()));
     } else
       setCenter(events[0].coordinates);
 
     setSelectedEvents();
     // To fix the issue when the map is resized in the search page
     mapRef.current?.resize();
+  }, [events, fitBoundsOnLoad]);
 
+  useEffect(_ => {
     if(showLines) {
-      const coordinates = events.slice(0, -1).map((event, i) => [
+      const coordinates = timelineEvents.slice(0, -1).map((event, i) => [
           event.id,
           parseFloat(event.coordinates[0]),
           parseFloat(event.coordinates[1]),
-          parseFloat(events[i+1].coordinates[0]),
-          parseFloat(events[i+1].coordinates[1]),
+          parseFloat(timelineEvents[i+1].coordinates[0]),
+          parseFloat(timelineEvents[i+1].coordinates[1]),
           50
       ]);
 
       setLineCoordinates(coordinates);
     }
-  }, [events, showLines, fitBoundsOnLoad]);
+  }, [timelineEvents, showLines]);
+
+  useEffect(_ => {
+    if(events.length === 0) return;
+    setTimelineEvents(events.filter(event => !isEmpty(event.data.date)));
+  }, [events]);
 
 
   const nextEvent = useCallback(eventId => {
 
     if(!isPlaying) { audio.pause(); return; }
 
-    let i           = findIndex(events, {id: eventId});
+    let i           = findIndex(timelineEvents, {id: eventId});
 
-    if(i === events.length - 1) {
+    if(i === timelineEvents.length - 1) {
       setPlaying(false);
-      setCenter(events[i].coordinates);
+      setCenter(timelineEvents[i].coordinates);
       audio.pause();
       return;
     }
 
-    const selEvents = [events[++i]];
+    const selEvents = [timelineEvents[++i]];
     const placeId   = selEvents[0].place.id;
 
     //  Check if next events have the same place
-    events.slice(i+1).reduce((isNext, event) => isNext && event.place.id === placeId && selEvents.push(event), true);
+    timelineEvents.slice(i+1).reduce((isNext, event) => isNext && event.place.id === placeId && selEvents.push(event), true);
 
     setSelectedEvents(selEvents);
 
-  }, [events, isPlaying]);
+  }, [timelineEvents, isPlaying, audio]);
 
 
   useEffect(_ => {
@@ -173,9 +181,9 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
 
   const playButton_clickHandler = () => {
     if(!isPlaying) {
-      let i = selectedEvents ? findIndex(events, last(selectedEvents)) + 1 : 0;
-      if(i === events.length) i = 0;
-      marker_clickHandler([events[i]]);
+      let i = selectedEvents ? findIndex(timelineEvents, last(selectedEvents)) + 1 : 0;
+      if(i === timelineEvents.length) i = 0;
+      marker_clickHandler([timelineEvents[i]]);
       setLineCoordinates([]);
       audio.currentTime = 0;
       audio.play();
@@ -190,7 +198,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
 
       {showLines &&
         <EventTimeline
-          events          = {events}
+          events          = {timelineEvents}
           selectedEvents  = {selectedEvents}
           isPlaying       = {isPlaying}
           onEventClick    = {marker_clickHandler}
@@ -221,7 +229,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
               className   = "marker"
               onClick     = {_ => marker_clickHandler([event])}
             >
-              <PinPoint label={showLines ? String.fromCharCode(65 + i) : null} />
+              <PinPoint label={showLines && !isEmpty(event.data.date) ? String.fromCharCode(65 + i) : null} />
             </Marker>
           ))}
         </Cluster>
