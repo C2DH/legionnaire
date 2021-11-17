@@ -1,19 +1,17 @@
-import { BrowserRouter } from 'react-router-dom';
-import ScrollMemory from 'react-router-scroll-memory';
-import AppRoutes from './AppRoutes';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/Header';
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <ScrollMemory />
+    <React.Fragment>
       <Header />
       <main className="mt-5">
-        <AppRoutes/>
+        <Outlet />
       </main>
       <Footer />
-    </BrowserRouter>
+    </React.Fragment>
   );
 }
 

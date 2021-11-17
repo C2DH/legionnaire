@@ -1,7 +1,8 @@
 import React, { Suspense, lazy, useEffect } from 'react'
-import { Switch, Route, useLocation } from "react-router-dom"
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import ReactGA from 'react-ga'
 import { QueryParamProvider } from 'use-query-params';
+import App from './App';
 import AppRouteLoading from './pages/AppRouteLoading';
 
 /* Pages */
@@ -19,69 +20,91 @@ const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 /* Pages routing by language */
 
-const usePageViews = ({ enableGA }) => {
-  let location = useLocation()
+
+const GA = ({ enabled = false }) => {
+
+  let location = useLocation();
 
   useEffect(
     () => {
       const url = [location.pathname, location.search].join('')
-      if (enableGA) {
+      if (enabled) {
         console.info('ReactGA.pageview:', url)
         ReactGA.pageview(url)
       } else {
         console.info('ReactGA.pageview disabled:', url)
       }
     },
-    [location, enableGA]
+    [location, enabled]
   )
+
+  return null;
 }
 
+
+const ScrollToTop = _ => {
+  let location = useLocation();
+  useEffect(_ => window.scrollTo(0, 0), [location]);
+  return null;
+}
+
+
+/**
+ * This is the main thing you need to use to adapt the react-router v6
+ * API to what use-query-params expects.
+ *
+ * Pass this as the `ReactRouterRoute` prop to QueryParamProvider.
+ */
+const RouteAdapter = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const adaptedHistory = React.useMemo(
+    () => ({
+      replace(location) {
+        navigate(location, { replace: true, state: location.state });
+      },
+      push(location) {
+        navigate(location, { replace: false, state: location.state });
+      },
+    }),
+    [navigate]
+  );
+  return children({ history: adaptedHistory, location });
+};
+
+
 const AppRoutes = ({enableGA=false}) => {
-  usePageViews({ enableGA })
 
   return (
-    <Suspense fallback={<AppRouteLoading/>}>
-      <QueryParamProvider ReactRouterRoute={Route}>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/about">
-            <About />
-          </Route>
-          <Route exact path="/browse">
-            <Browse />
-          </Route>
-          <Route exact path="/browse/person/:slug">
-            <Person />
-          </Route>
-          <Route exact path="/browse/place/:slug">
-            <Place />
-          </Route>
-          <Route exact path="/browse/all-places">
-            <AllPlaces />
-          </Route>
-          <Route exact path="/search">
-            <Search />
-          </Route>
-          <Route exact path="/collection">
-            <Collection />
-          </Route>
-          <Route exact path="/collection/:slug">
-            <Media />
-          </Route>
-          <Route exact path="/timeline">
-            <Timeline />
-          </Route>
-          <Route exact path="/terms-of-use">
-            <TermsOfUse />
-          </Route>
-          <Route path="*">
-            <NotFound />
-          </Route>
-        </Switch>
-      </QueryParamProvider>
-    </Suspense>
+    <BrowserRouter>
+      <GA enabled={enableGA} />
+      <ScrollToTop />
+      <Suspense fallback={<AppRouteLoading/>}>
+        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route index element={<Home />} />
+              <Route path="about" element={<About />} />
+              <Route path="browse">
+                <Route index element={<Browse />} />
+                <Route path="person/:slug" element={<Person />} />
+                <Route path="place/:slug" element={<Place />} />
+                <Route path="all-places" element={<AllPlaces />} />
+              </Route>
+              <Route path="search" element={<Search />} />
+              <Route path="collection">
+                <Route index element={<Collection />} />
+                <Route path=":slug" element={<Media />} />
+              </Route>
+              <Route path="timeline" element={<Timeline />} />
+              <Route path="terms-of-use" element={<TermsOfUse />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </QueryParamProvider>
+      </Suspense>
+    </BrowserRouter>
   )
 }
 
