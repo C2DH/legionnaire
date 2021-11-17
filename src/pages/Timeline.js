@@ -18,8 +18,8 @@ const Timeline = () => {
     <Container className="Timeline">
       <Row className="mt-3 gx-5">
 
-        <Col className="abstract">
-          <ReactMarkdown linkTarget="_blank">
+        <Col>
+          <ReactMarkdown linkTarget="_blank" className="abstract">
             {page?.data.abstract}
           </ReactMarkdown>
         </Col>
