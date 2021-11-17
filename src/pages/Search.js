@@ -37,7 +37,13 @@ const Search = () => {
         <Row>
           <Col>
             <Form className="search-form my-4" onSubmit={searchForm_submitHandler}>
-              <Form.Control className="search-input" name="q" ref={queryField} defaultValue={query.q} />
+              <Form.Control
+                className     = "search-input"
+                name          = "q"
+                ref           = {queryField}
+                defaultValue  = {query.q}
+                placeholder   = "Rerchercher par nom ou lieux"
+              />
               <FontAwesomeIcon icon={faSearch} />
             </Form>
           </Col>

@@ -14,9 +14,6 @@ const Timeline = () => {
   const [{ eventsByYear }]  = useGetTimelineEvents();
   const [{ page }]          = useGetStaticPage(TimelineRoute.slug);
 
-  console.log(eventsByYear);
-  console.log(page);
-
   return (
     <Container className="Timeline">
       <Row className="mt-3 gx-5">
