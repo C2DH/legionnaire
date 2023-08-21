@@ -55,7 +55,7 @@ export const personState = rj(
     //  Selector to get events in an object with the event type as key
     selectors: ({ getData }) => ({
       getPerson: state => getData(state),
-      getThumbnail: state => getData(state)?.documents.filter(doc => doc.data.type === MEDIA_VIGNETTE)[0],
+      getThumbnail: state => getData(state)?.documents.filter(doc => doc.data.category === MEDIA_VIGNETTE)[0],
       getMedals: state => getData(state)?.documents.filter(doc => doc.data.type === TYPE_MEDAL),
       getMilitaryRanks: state => sortBy(getData(state)?.data.military_rank, ['date']),
       getProfessions: state => sortBy(getData(state)?.data.profession, ['date'])
@@ -85,7 +85,7 @@ export const peopleState = rj(
     selectors: ({ getList, getCount, hasNext, getNext }) => ({
       getPeople: state => getList(state)?.map(person => ({
         ...person,
-        illustration: person.documents.filter(doc => doc.data.type === MEDIA_VIGNETTE)[0],
+        illustration: person.documents.filter(doc => doc.data.category === MEDIA_VIGNETTE)[0],
         data: {
           ...person.data,
           birth_year: find(person.documents, ['data.event_type', EVENT_BIRTH])?.data.date?.substring(0, 4),

@@ -17,9 +17,9 @@ const Collection = () => {
   const [{ mediaTypeFacets, count }] = useGetMediaFacets();
   const [{ medias, canLoadMore, nextOffset}] = useGetMedias(offset, queryType);
 
-  function mediaTypeFacet_handleSelect(type) {
+  function mediaTypeFacet_handleSelect(category) {
     setOffset(0);
-    setQueryType(type !== TYPE_FACET_ALL ? type : undefined);
+    setQueryType(category !== TYPE_FACET_ALL ? category : undefined);
   }
 
   return (
@@ -34,8 +34,8 @@ const Collection = () => {
         >
           <Nav.Link eventKey={TYPE_FACET_ALL}>{l(TYPE_FACET_ALL)} ({count})</Nav.Link>
           {mediaTypeFacets && mediaTypeFacets.map(facet =>
-            <Nav.Link eventKey={facet.data__type} key={facet.data__type}>
-              {l(facet.data__type)} ({facet.count})
+            <Nav.Link eventKey={facet.data__category} key={facet.data__category}>
+              {l(facet.data__category)} ({facet.count})
             </Nav.Link>
           )}
         </Nav>

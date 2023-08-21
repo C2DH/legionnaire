@@ -28,6 +28,8 @@ export const defaultLanguage = process.env.REACT_APP_DEFAULT_LANGUAGE ?? 'fr_FR'
 
 export const TYPE_IMAGE = "image";
 export const TYPE_PDF = "pdf";
+export const TYPE_LINK = "link";
+
 export const TYPE_MEDAL = "medal";
 export const TYPE_PERSON = "person";
 
@@ -43,6 +45,6 @@ export const MEDAL_ICONS = {
   "document": DocumentIcon,
   "félicitations": CongratulationIcon,
   "médaille": MedalIcon,
-  "légion d'honneur": LegionHonorIcon,
+  "légion_d'honneur": LegionHonorIcon,
   "ordre": OrdreIcon
 }

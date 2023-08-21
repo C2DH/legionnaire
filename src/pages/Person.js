@@ -11,6 +11,7 @@ import { MediaRoute } from '../constants';
 import {
   TYPE_IMAGE,
   TYPE_PDF,
+  TYPE_LINK,
   MEDIA_VIGNETTE
 } from '../constants';
 
@@ -128,7 +129,7 @@ Lorem ipsum (version originale)
           <Col md={6}>
             <ul>
               {person?.documents.map(doc =>
-                doc.type === 'link' &&
+                doc.type === TYPE_LINK &&
                   <li key={doc.slug}>
                     <a
                       href    = {doc.data.url}
@@ -142,7 +143,7 @@ Lorem ipsum (version originale)
             </ul>
 
             {person?.documents.map(doc =>
-              ((doc.type === TYPE_IMAGE || doc.type === TYPE_PDF) && doc.data.type !== MEDIA_VIGNETTE) &&
+              ((doc.type === TYPE_IMAGE || doc.type === TYPE_PDF) && doc.data.category !== MEDIA_VIGNETTE) &&
                 <div className="media" key={doc.slug}>
                   <Link to={`${MediaRoute.to}${doc.slug}`}>
                     <img src={doc.data.resolutions?.medium.url} alt={doc.title} />

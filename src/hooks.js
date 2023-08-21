@@ -169,7 +169,10 @@ export function useGetMedias(offset = 0, type) {
   const params = useMemo(() => ({
     filters: {
       type__in: ['image', 'pdf'],
-      data__type: type
+      data__category: type
+    },
+    exclude: {
+      data__category: 'vignette'
     },
     limit: 50,
     offset: offset,
@@ -192,8 +195,11 @@ const mediaFacetsParams =
     filters: {
       type__in: ['image', 'pdf']
     },
+    exclude: {
+      data__category: 'vignette'
+    },
     limit: 1,
-    facets: 'data__type'
+    facets: 'data__category'
   };
 export function useGetMediaFacets() {
 
@@ -202,7 +208,7 @@ export function useGetMediaFacets() {
     [ mediaFacetsParams ],
     true,
     (state, { getData }) => ({
-      mediaTypeFacets: getData(state)?.facets?.data__type,
+      mediaTypeFacets: getData(state)?.facets?.data__category,
       count: getData(state)?.count
     })
   );

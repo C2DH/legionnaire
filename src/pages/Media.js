@@ -32,11 +32,16 @@ const Media = () => {
               }
             </h1>
             <div>
-              <span className="label">Catégorie : </span>{l(media?.data.type)}
+              <span className="label">Type de média : </span>{l(media?.data.media_type)}
             </div>
             <div>
-              <span className="label">Source : </span>{media?.data.source}
+              <span className="label">Catégorie : </span>{l(media?.data.category)}
             </div>
+            {media?.data.source &&
+              <div>
+                <span className="label">Source : </span>{media?.data.source}
+              </div>
+            }
             {people?.length > 0 &&
               <div>
                 <span className="label">Légionnaire(s) : </span>
@@ -47,6 +52,9 @@ const Media = () => {
                 )}
               </div>
             }
+            <div className="mt-4">
+              {media?.data.description}
+            </div>
         </Col>
 
         <Col md={8} className="h-100">
