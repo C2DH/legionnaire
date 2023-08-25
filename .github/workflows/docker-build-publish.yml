@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [16.x]
     steps:
     - uses: actions/checkout@master
     - name: Fetch Prune Unshallow Tags
