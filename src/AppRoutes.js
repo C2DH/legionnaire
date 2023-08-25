@@ -1,7 +1,8 @@
-import React, { Suspense, lazy, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom"
-import ReactGA from 'react-ga'
+import React, { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import ReactGA from 'react-ga4';
 import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import App from './App';
 import AppRouteLoading from './pages/AppRouteLoading';
 
@@ -20,23 +21,14 @@ const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 /* Pages routing by language */
 
-
-const GA = ({ enabled = false }) => {
-
-  let location = useLocation();
-
-  useEffect(
-    () => {
-      const url = [location.pathname, location.search].join('')
-      if (enabled) {
-        console.info('ReactGA.pageview:', url)
-        ReactGA.pageview(url)
-      } else {
-        console.info('ReactGA.pageview disabled:', url)
-      }
-    },
-    [location, enabled]
-  )
+const GA = ({ gaCode }) => {
+  useEffect(() => {
+    if(gaCode) {
+      console.log('ReactGA.initialize');
+      ReactGA.initialize(gaCode, { legacyDimensionMetric: false });
+      ReactGA.gtag('consent', 'default', {'analytics_storage': 'denied'});
+    }
+  }, [gaCode]);
 
   return null;
 }
@@ -49,39 +41,14 @@ const ScrollToTop = _ => {
 }
 
 
-/**
- * This is the main thing you need to use to adapt the react-router v6
- * API to what use-query-params expects.
- *
- * Pass this as the `ReactRouterRoute` prop to QueryParamProvider.
- */
-const RouteAdapter = ({ children }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const adaptedHistory = React.useMemo(
-    () => ({
-      replace(location) {
-        navigate(location, { replace: true, state: location.state });
-      },
-      push(location) {
-        navigate(location, { replace: false, state: location.state });
-      },
-    }),
-    [navigate]
-  );
-  return children({ history: adaptedHistory, location });
-};
-
-
 const AppRoutes = ({enableGA=false}) => {
 
   return (
     <BrowserRouter>
-      <GA enabled={enableGA} />
+      <GA gaCode={process.env.REACT_APP_GA_CODE} />
       <ScrollToTop />
       <Suspense fallback={<AppRouteLoading/>}>
-        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+        <QueryParamProvider adapter={ReactRouter6Adapter}>
           <Routes>
             <Route path="/" element={<App />}>
               <Route index element={<Home />} />

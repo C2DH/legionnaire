@@ -1,4 +1,10 @@
-import axios from 'axios'
+import axios from 'axios';
+import Qs from 'qs';
+import { isPlainObject } from 'lodash';
+
+// Format nested params with JSON.stringify
+axios.defaults.paramsSerializer = params => 
+    Qs.stringify(Object.fromEntries(Object.entries(params).map(([k, v]) => [k, isPlainObject(v) ? JSON.stringify(v) : v])));
 
 export function getStory(id, params = { parser: 'yaml' }, timeout = 0) {
   console.info('getStory URL:', `/api/story/${id}`, params)
@@ -20,7 +26,5 @@ export function getDocument(id) {
 }
 
 export function getDocuments(params) {
-  return axios.get(`/api/document/`, { params }).then((res) => {
-    return res.data
-  })
+  return axios.get('/api/document/', { params }).then((res) => res.data);
 }

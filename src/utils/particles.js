@@ -93,9 +93,11 @@ export default class Particles {
         const image 		= new Image();
   		    image.src 			= src;
   		    image.onload 		= () => {
-            this.particles[i] = this.createParticles(image);
-            if(i === 0)
-              this.init(containerTarget, image.width, image.height);
+				if(this.particles) {
+					this.particles[i] = this.createParticles(image);
+					if(i === 0)
+						this.init(containerTarget, image.width, image.height);
+				}
             }
       });
 	}
