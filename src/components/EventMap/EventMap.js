@@ -55,7 +55,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
   const [timelineEvents, setTimelineEvents]   = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
   const [isPlaying, setPlaying]               = useState(false);
-  const [audio]                               = useState(_ => new Audio("/indiana-jones.mp3"));
+  const [audio]                               = useState(/*_ => new Audio("/sound.mp3")*/);
 
   useEffect(_ => _ => audio.pause(), [audio]);
 
@@ -97,14 +97,14 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
 
   const nextEvent = useCallback(eventId => {
 
-    if(!isPlaying) { audio.pause(); return; }
+    if(!isPlaying) { audio?.pause(); return; }
 
     let i           = findIndex(timelineEvents, {id: eventId});
 
     if(i === timelineEvents.length - 1) {
       setPlaying(false);
       setCenter(timelineEvents[i].coordinates);
-      audio.pause();
+      audio?.pause();
       return;
     }
 
@@ -185,8 +185,10 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
       if(i === timelineEvents.length) i = 0;
       marker_clickHandler([timelineEvents[i]]);
       setLineCoordinates([]);
-      audio.currentTime = 0;
-      audio.play();
+      if(audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
     }
 
     setPlaying(!isPlaying);
