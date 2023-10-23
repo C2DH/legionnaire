@@ -4,6 +4,9 @@ import {
   TermsOfUseRoute
 } from '../constants'
 
+import { ReactComponent as LogoUni } from '../images/logo_unilu.svg';
+
+
 const now = new Date()
 
 const Footer = ()=> {
@@ -11,14 +14,19 @@ const Footer = ()=> {
   return (
     <Container as="footer" className="py-5">
       <Row>
-        <Col>Copyright © <a href="https://www.uni.lu/">University of Luxembourg</a> {now.getFullYear()}</Col>
-        <Col>
-          <Link to={TermsOfUseRoute.to}>{TermsOfUseRoute.label}</Link>
-        </Col>
-        <Col>
-          View sourcecode of this version: <a href={`https://github.com/C2DH/legionnaire/commit/${process.env.REACT_APP_GIT_REVISION}`}>
-          {process.env.REACT_APP_GIT_BRANCH}/{process.env.REACT_APP_GIT_REVISION}
+        <Col className="text-center" md={3}>
+          <a
+            href      = "https://wwwfr.uni.lu/"
+            target    = "_blank"
+            className = "logo"
+            rel       = "noreferrer"
+            >
+            <LogoUni />
           </a>
+        </Col>
+        <Col className="text-center">Copyright © <a href="https://www.uni.lu/">University of Luxembourg</a> {now.getFullYear()}</Col>
+        <Col className="text-center" md={3}>
+          <Link to={TermsOfUseRoute.to}>{TermsOfUseRoute.label}</Link>
         </Col>
       </Row>
     </Container>
