@@ -84,7 +84,6 @@ const Home = () => {
             hold        = {hold}
             touching    = {touching}
             onChange    = {particles_changeHandler}
-            withControls
           />
         </Col>
       </Row>
