@@ -57,7 +57,7 @@ const EventMap = ({ events = [], className, showLines = false, fitBoundsOnLoad =
   const [isPlaying, setPlaying]               = useState(false);
   const [audio]                               = useState(/*_ => new Audio("/sound.mp3")*/);
 
-  useEffect(_ => _ => audio.pause(), [audio]);
+  useEffect(_ => _ => audio?.pause(), [audio]);
 
   useEffect(_ => {
     if(events.length === 0) return;
