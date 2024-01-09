@@ -18,7 +18,7 @@ const CollectionCard = ({ doc }) => (
       </div>
     </div>
     <div>
-      {truncate(doc.title, TRUNCATE_OPTIONS)}
+      {truncate(doc.data.title, TRUNCATE_OPTIONS)}
       {doc.data.index &&
         <span> (p. {doc.data.index})</span>
       }
